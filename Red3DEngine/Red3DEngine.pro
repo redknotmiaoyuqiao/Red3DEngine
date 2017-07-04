@@ -13,8 +13,8 @@ SOURCES += main.cpp \
     GL/GLShader.cpp \
     GL/GLTexture.cpp \
     GL/GLVAO.cpp \
-    GL/TextFile.cpp
+    GL/TextFile.cpp \
 
 HEADERS += \
     GL/File.hpp \
-    GL/RedGL.hpp
+    GL/RedGL.hpp \
