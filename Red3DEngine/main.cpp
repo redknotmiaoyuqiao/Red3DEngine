@@ -49,9 +49,8 @@ int main( void )
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    TextFile * ReadFile = new TextFile();
-    char * v_shader_code = ReadFile->ReadFile("/home/redknot/RedVideo/RedGL/GLSL/v_shader.vert");
-    char * f_shader_code = ReadFile->ReadFile("/home/redknot/RedVideo/RedGL/GLSL/f_shader.frag");
+    char * v_shader_code = "void main(){}";
+    char * f_shader_code = "void main(){}";
 
     GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,v_shader_code);
     GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,f_shader_code);
@@ -87,7 +86,6 @@ int main( void )
     vao->AddVBO(txtcoor,sizeof(txtcoor),1,3);
     vao->SetEBO(indices,sizeof(indices));
 
-
     GLTexture * y = new GLTexture();
     GLTexture * u = new GLTexture();
     GLTexture * v = new GLTexture();
@@ -107,7 +105,6 @@ int main( void )
     //glDeleteVertexArrays(1, &VertexArrayID);
     //glDeleteProgram(programID);
 
-    delete ReadFile;
     delete v_shader;
     delete f_shader;
     delete program;
