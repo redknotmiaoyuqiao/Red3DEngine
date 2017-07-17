@@ -10,10 +10,10 @@ win32
 
 unix:!macx
 {
-    LIBS += -lglfw
-    LIBS += -lGLEW
-    LIBS += -lGL
-    LIBS += -lSOIL
+#    LIBS += -lglfw
+#    LIBS += -lGLEW
+#    LIBS += -lGL
+#    LIBS += -lSOIL
 }
 
 unix:macx

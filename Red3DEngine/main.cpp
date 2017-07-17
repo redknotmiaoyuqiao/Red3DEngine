@@ -9,8 +9,8 @@
 
 GLFWwindow* window;
 
-int width = 640;
-int height = 480;
+int width = 800;
+int height = 640;
 
 int main( void )
 {
@@ -27,7 +27,7 @@ int main( void )
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow( width, height, "RedVideo", NULL, NULL);
+    window = glfwCreateWindow( width, height, "Red3DEngine", NULL, NULL);
     if( window == NULL ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         getchar();
@@ -45,7 +45,7 @@ int main( void )
     }
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
