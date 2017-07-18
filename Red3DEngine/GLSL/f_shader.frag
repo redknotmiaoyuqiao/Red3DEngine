@@ -12,7 +12,7 @@ uniform vec3 objectColor;
 void main()
 {
     // Ambient
-    float ambientStrength = 0.1f;
+    float ambientStrength = 0.5f;
     vec3 ambient = ambientStrength * lightColor;
 
     // Diffuse

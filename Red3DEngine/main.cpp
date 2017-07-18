@@ -16,20 +16,21 @@
 #include "GL/RedGL.hpp"
 #include "GL/File.hpp"
 
+#include "Engine/Engine.hpp"
+
 GLFWwindow* window;
 
-int width = 700;
-int height = 700;
+int width = 1280;
+int height = 720;
 
 
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  10.0f);
+glm::vec3 cameraPos   = glm::vec3(0.0f, 8.0f,  40.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
 
 
 int main( void )
@@ -47,6 +48,8 @@ int main( void )
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+
     window = glfwCreateWindow( width, height, "Red3DEngine", NULL, NULL);
     if( window == NULL ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
@@ -56,12 +59,10 @@ int main( void )
     }
     glfwMakeContextCurrent(window);
 
-
     // Set the required callback functions
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
-
 
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
@@ -75,9 +76,9 @@ int main( void )
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
     //背面剔除
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glFrontFace(GL_CW);
+    glFrontFace(GL_CCW);
     //深度测试
     glEnable(GL_DEPTH_TEST);
 
@@ -96,71 +97,18 @@ int main( void )
     program->AddShader(f_shader);
     program->LinkProgram();
 
-
-    GLfloat vertices[] = {
-        1.0f,0.0f,1.0f,
-        1.0f,0.0f,-1.0f,
-        -1.0f,0.0f,-1.0f,
-        -1.0f,0.0f,1.0f,
-        1.0f,2.0f,1.0f,
-        1.0f,2.0f,-1.0f,
-        -1.0f,2.0f,-1.0f,
-        -1.0f,2.0f,1.0f
-    };
-
-    GLuint indices[] = { // 注意索引从0开始!
-                         0,7,4,
-                         0,3,7,
-
-                         0,4,1,
-                         1,4,5,
-
-                         1,5,2,
-                         5,6,2,
-
-                         6,7,2,
-                         7,3,2,
-
-                         4,7,6,
-                         4,6,5,
-
-                         0,2,3,
-                         0,1,2
-    };
-
-    GLfloat txtcoor[] = {
-        1.0f, 1.0, 0.0f,   // 右上角
-        1.0f, 0.0f, 0.0f,  // 右下角
-        0.0f, 0.0f, 0.0f, // 左下角
-        0.0f, 1.0f, 0.0f   // 左上角
-    };
-
-    GLfloat normal[] = {
-        1.0f,-1.0f,1.0f,
-        1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,1.0f,
-        1.0f,1.0f,1.0f,
-        1.0f,1.0f,-1.0f,
-        -1.0f,1.0f,-1.0f,
-        -1.0f,1.0f,-1.0f
-    };
-
-    GLVAO * vao = new GLVAO();
-    vao->AddVBO(vertices,sizeof(vertices),0,3);
-    vao->AddVBO(normal,sizeof(normal),1,3);
-    vao->AddVBO(txtcoor,sizeof(txtcoor),2,3);
-    vao->SetEBO(indices,sizeof(indices));
-
     GLTexture * image = new GLTexture();
     image->LoadImage("/Users/redknot/Desktop/huaji.jpg");
+
+    std::string path = "/Users/redknot/Desktop/nanosuit/nanosuit.obj";
+    Model * m = new Model(path);
 
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 model;
-        model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * 50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * 30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
         glm::mat4 view;
@@ -176,7 +124,7 @@ int main( void )
         glUniformMatrix4fv(program->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glUniform3f(program->GetUniformLocation("objectColor"), 1.0f, 0.5f, 0.31f);// 我们所熟悉的珊瑚红
-        glUniform3f(program->GetUniformLocation("lightColor"),  1.0f, 1.0f, 1.0f); // 依旧把光源设置为白色
+        glUniform3f(program->GetUniformLocation("lightColor"),  1.0f, 1.0f, 0.0f); // 依旧把光源设置为白色
 
         glUniform3f(program->GetUniformLocation("lightPos"),  3.0f, 5.0f, 3.0f);
         glUniform3f(program->GetUniformLocation("viewPos"),  cameraPos[0],cameraPos[1],cameraPos[2]);
@@ -185,7 +133,7 @@ int main( void )
         glBindTexture(GL_TEXTURE_2D, image->TextureId);
         glUniform1i(program->GetUniformLocation("image"), 0);
 
-        vao->DrawVAO();
+        m->Draw(program);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -198,9 +146,10 @@ int main( void )
     delete v_shader;
     delete f_shader;
     delete program;
-    delete vao;
 
     delete image;
+
+    delete m;
 
     glfwTerminate();
 
@@ -209,7 +158,7 @@ int main( void )
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-    GLfloat cameraSpeed = 0.05f;
+    GLfloat cameraSpeed = 0.3f;
     if(key == GLFW_KEY_W)
         cameraPos += cameraSpeed * cameraFront;
     if(key == GLFW_KEY_S)

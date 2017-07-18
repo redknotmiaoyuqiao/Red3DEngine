@@ -36,10 +36,13 @@ SOURCES += main.cpp \
     GL/GLTexture.cpp \
     GL/GLVAO.cpp \
     GL/TextFile.cpp \
+    Engine/Mesh.cpp \
+    Engine/Model.cpp
 
 HEADERS += \
     GL/File.hpp \
     GL/RedGL.hpp \
+    Engine/Engine.hpp
 
 DISTFILES += \
     GLSL/f_shader.frag \
