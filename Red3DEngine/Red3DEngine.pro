@@ -24,9 +24,11 @@ unix:macx
     LIBS+= -L/usr/local/lib -lglfw3
     LIBS+= -L/usr/local/lib -lGLEW
     LIBS+= -L/usr/local/lib -lSOIL
+    LIBS+= -L/usr/local/lib -lassimp
 }
 
-INCLUDEPATH+=/usr/local/include
+INCLUDEPATH += /usr/local/include
+INCLUDEPATH += glm/
 
 SOURCES += main.cpp \
     GL/GLProgram.cpp \
@@ -38,3 +40,7 @@ SOURCES += main.cpp \
 HEADERS += \
     GL/File.hpp \
     GL/RedGL.hpp \
+
+DISTFILES += \
+    GLSL/f_shader.frag \
+    GLSL/v_shader.vert

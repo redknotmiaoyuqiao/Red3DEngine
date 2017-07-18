@@ -48,6 +48,7 @@ public:
 
     GLuint EBOId;
     std::vector<GLuint> VBOList;
+    int DrawTime;
 
     GLVAO();
     ~GLVAO();
