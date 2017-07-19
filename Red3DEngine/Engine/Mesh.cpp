@@ -30,12 +30,30 @@ Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices, std::
         arrayTxtcoor[i * 3 + 2] = 0.0f;
     }
 
+    /*
+    FILE *fp = fopen("/Users/redknot/Desktop/Face.mesh", "rb");
+    int n, nt;
+    fread(&n, 4, 1, fp);
+    fread(&nt, 4, 1, fp);
+    printf("%d vertices, %d triangles\n", n, nt);
+    float   *XY = new float[n*2],
+            *XYZ = new float[n*3];
+    int     *idx = new int[nt*3];
+    fread(XY, 4*2, n, fp);
+    fread(XYZ, 4*3, n, fp);
+    fread(idx, 4*3, nt, fp);
+    fclose(fp);
+    */
+
+
     vao = new GLVAO();
+
+    //vao->AddVBO(XYZ,4*3*n,0,3);
+    //vao->SetEBO((GLuint*)idx,4*3*nt);
 
     vao->AddVBO(arrayVertices,sizeof(float) * vertices->size() * 3,0,3);
     vao->AddVBO(arrayNormals,sizeof(float) * vertices->size() * 3,1,3);
     vao->AddVBO(arrayTxtcoor,sizeof(float) * vertices->size() * 3,2,3);
-
     vao->SetEBO(arrayIndices,sizeof(unsigned int) * indices->size());
 }
 

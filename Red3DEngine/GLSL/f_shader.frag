@@ -1,33 +1,60 @@
 #version 330 core
-out vec4 color;
+
+struct Material
+{
+    sampler2D diffuse;
+    sampler2D specular;
+    float shininess;
+};
+
+
+struct Light
+{
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
 
 in vec3 FragPos;
+in vec3 Txtcoor;
 in vec3 Normal;
 
-uniform vec3 lightPos;
+out vec4 color;
+
+uniform Light light;
+uniform Material material;
 uniform vec3 viewPos;
-uniform vec3 lightColor;
-uniform vec3 objectColor;
+
+uniform sampler2D normalMap;
 
 void main()
 {
-    // Ambient
-    float ambientStrength = 0.5f;
-    vec3 ambient = ambientStrength * lightColor;
+    vec2 TexCoords = vec2(Txtcoor.x,Txtcoor.y);
 
-    // Diffuse
+    // 从法线贴图范围[0,1]获取法线
+    //vec3 Normal = texture(normalMap, TexCoords).rgb;
+    // 将法线向量转换为范围[-1,1]
+    //Normal = normalize(Normal * 2.0 - 1.0);
+
+    // 环境光
+    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
+
+    // 漫反射光
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 lightDir = normalize(light.position - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
 
-    // Specular
-    float specularStrength = 0.5f;
+    // 镜面高光
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightColor;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
 
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+    vec3 result = ambient + diffuse + specular;
     color = vec4(result, 1.0f);
+
+    //color = vec4(Normal, 1.0f);
+
 }

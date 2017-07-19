@@ -24,7 +24,7 @@ int width = 1280;
 int height = 720;
 
 
-glm::vec3 cameraPos   = glm::vec3(0.0f, 8.0f,  40.0f);
+glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  40.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
@@ -47,6 +47,8 @@ int main( void )
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
     //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
@@ -97,10 +99,19 @@ int main( void )
     program->AddShader(f_shader);
     program->LinkProgram();
 
-    GLTexture * image = new GLTexture();
-    image->LoadImage("/Users/redknot/Desktop/huaji.jpg");
+    GLTexture * ambient = new GLTexture();
+    ambient->LoadImage("/Users/redknot/Desktop/Cubeq/Cube/DefaultMaterial_Base_Color.png");
 
-    std::string path = "/Users/redknot/Desktop/nanosuit/nanosuit.obj";
+    GLTexture * specular = new GLTexture();
+    specular->LoadImage("/Users/redknot/Desktop/Cubeq/Cube/DefaultMaterial_Roughness.png");
+
+    GLTexture * normal = new GLTexture();
+    normal->LoadImage("/Users/redknot/Desktop/Cubeq/Cube/Cube_DefaultMaterial_Nomal.png");
+
+    //std::string path = "/Users/redknot/Desktop/nanosuit/nanosuit.obj";
+    //std::string path = "/Users/redknot/Desktop/Face2.FBX";
+
+    std::string path = "/Users/redknot/Desktop/Cubeq/Cube.FBX";
     Model * m = new Model(path);
 
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )
@@ -123,15 +134,38 @@ int main( void )
         glUniformMatrix4fv(program->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(program->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-        glUniform3f(program->GetUniformLocation("objectColor"), 1.0f, 0.5f, 0.31f);// 我们所熟悉的珊瑚红
-        glUniform3f(program->GetUniformLocation("lightColor"),  1.0f, 1.0f, 0.0f); // 依旧把光源设置为白色
 
-        glUniform3f(program->GetUniformLocation("lightPos"),  3.0f, 5.0f, 3.0f);
+
+
         glUniform3f(program->GetUniformLocation("viewPos"),  cameraPos[0],cameraPos[1],cameraPos[2]);
 
+
+
+
+
+
+
+        //material
         glActiveTexture(GL_TEXTURE0); //在绑定纹理之前先激活纹理单元
-        glBindTexture(GL_TEXTURE_2D, image->TextureId);
-        glUniform1i(program->GetUniformLocation("image"), 0);
+        glBindTexture(GL_TEXTURE_2D, ambient->TextureId);
+        glUniform1i(program->GetUniformLocation("material.ambient"), 0);
+
+        glActiveTexture(GL_TEXTURE1); //在绑定纹理之前先激活纹理单元
+        glBindTexture(GL_TEXTURE_2D, specular->TextureId);
+        glUniform1i(program->GetUniformLocation("material.specular"), 1);
+
+        glActiveTexture(GL_TEXTURE2); //在绑定纹理之前先激活纹理单元
+        glBindTexture(GL_TEXTURE_2D, normal->TextureId);
+        glUniform1i(program->GetUniformLocation("normalMap"), 2);
+
+        glUniform1f(program->GetUniformLocation("material.shininess"), 32.0f);
+
+        //light
+        glUniform3f(program->GetUniformLocation("light.ambient"), 0.2f, 0.2f, 0.2f);
+        glUniform3f(program->GetUniformLocation("light.diffuse"), 0.9f, 0.9f, 0.9f);// 让我们把这个光调暗一点，这样会看起来更自然
+        glUniform3f(program->GetUniformLocation("light.specular"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(program->GetUniformLocation("light.position"),  10.0f, 10.0f, 10.0f);
+
 
         m->Draw(program);
 
@@ -147,7 +181,8 @@ int main( void )
     delete f_shader;
     delete program;
 
-    delete image;
+    delete ambient;
+    delete specular;
 
     delete m;
 

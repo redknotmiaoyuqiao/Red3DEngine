@@ -9,7 +9,7 @@ Model::Model(std::string path)
     meshs = new std::vector<Mesh*>();
 
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
     if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -24,6 +24,7 @@ Model::Model(std::string path)
         std::vector<GLuint> * indices = new std::vector<GLuint>();
         std::vector<Texture*> * textures = new std::vector<Texture*>();
 
+        //paiMesh->mTangents
         //设置Vertex
         for(int j=0;j<paiMesh->mNumVertices;j++){
             Vertex * v = new Vertex;
