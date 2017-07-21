@@ -14,6 +14,11 @@ GLTexture::GLTexture()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+GLTexture::~GLTexture()
+{
+    //glDeleteTextures(TextureId);
+}
+
 void GLTexture::LoadImage(char * filePath)
 {
     glBindTexture(GL_TEXTURE_2D, TextureId);
@@ -21,7 +26,12 @@ void GLTexture::LoadImage(char * filePath)
     int width, height;
     unsigned char* image = SOIL_load_image(filePath, &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    printf("width:%d,height:%d\n",width,height);
+
+    RedLog("-------------LoadImage Start-------------\n");
+    RedLog("Path:%s\n",filePath);
+    RedLog("width:%d\nheight:%d\n",width,height);
+    RedLog("-------------LoadImage End---------------\n\n\n\n");
+
     SOIL_free_image_data(image);
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -33,3 +43,5 @@ void GLTexture::SetData(unsigned char * data,int width,int height,GLenum interna
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+

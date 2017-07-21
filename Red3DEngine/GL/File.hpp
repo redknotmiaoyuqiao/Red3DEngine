@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DEBUG/Debug.hpp"
+
 class TextFile
 {
 private:

@@ -8,7 +8,7 @@ GLShader::GLShader(GLenum type, const GLchar * src)
     int InfoLogLength;
 
     // Compile Shader
-    printf("Compiling shader : %s\n", src);
+    RedLog("Compiling shader : %s\n", src);
     glShaderSource(ShaderId, 1, &src , NULL);
     glCompileShader(ShaderId);
 
@@ -18,7 +18,7 @@ GLShader::GLShader(GLenum type, const GLchar * src)
     if ( InfoLogLength > 0 ){
         std::vector<char> ShaderErrorMessage(InfoLogLength+1);
         glGetShaderInfoLog(ShaderId, InfoLogLength, NULL, &ShaderErrorMessage[0]);
-        printf("%s\n", &ShaderErrorMessage[0]);
+        RedLog("%s\n", &ShaderErrorMessage[0]);
     }
 }
 

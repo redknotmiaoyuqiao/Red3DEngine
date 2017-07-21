@@ -1,10 +1,9 @@
 #include "Engine.hpp"
 
-Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices, std::vector<Texture*> * textures)
+Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices)
 {
     this->vertices = vertices;
     this->indices = indices;
-    this->textures = textures;
 
     arrayVertices = (float *)malloc(sizeof(float) * vertices->size() * 3);
     arrayNormals = (float *)malloc(sizeof(float) * vertices->size() * 3);
@@ -43,14 +42,20 @@ Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices, std::
     fread(XYZ, 4*3, n, fp);
     fread(idx, 4*3, nt, fp);
     fclose(fp);
-    */
+
 
 
     vao = new GLVAO();
 
-    //vao->AddVBO(XYZ,4*3*n,0,3);
-    //vao->SetEBO((GLuint*)idx,4*3*nt);
+    vao->AddVBO(XYZ,4*3*n,0,3);
 
+    vao->AddVBO(XY,4*2*n,2,2);
+
+    vao->SetEBO((GLuint*)idx,4*3*nt);
+    */
+
+
+    vao = new GLVAO();
     vao->AddVBO(arrayVertices,sizeof(float) * vertices->size() * 3,0,3);
     vao->AddVBO(arrayNormals,sizeof(float) * vertices->size() * 3,1,3);
     vao->AddVBO(arrayTxtcoor,sizeof(float) * vertices->size() * 3,2,3);
@@ -66,17 +71,23 @@ Mesh::~Mesh()
     vertices->clear();
     delete vertices;
 
-    for (std::vector<Texture *>::iterator it = textures->begin(); it != textures->end(); it++){
-        delete *it;
-    }
-    textures->clear();
-    delete textures;
-
     delete vao;
+
+    free(arrayVertices);
+    free(arrayNormals);
+    free(arrayTxtcoor);
+
+    delete this->material;
+}
+
+void Mesh::setMaterial(Material * material)
+{
+    this->material = material;
 }
 
 void Mesh::Draw(GLProgram * program)
 {
     program->UseProgram();
+    this->material->UseMaterial(program);
     vao->DrawVAO();
 }

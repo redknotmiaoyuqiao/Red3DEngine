@@ -14,6 +14,7 @@ unix:!macx
 #    LIBS += -lGLEW
 #    LIBS += -lGL
 #    LIBS += -lSOIL
+#    LIBS += -lassimp
 }
 
 unix:macx
@@ -37,12 +38,16 @@ SOURCES += main.cpp \
     GL/GLVAO.cpp \
     GL/TextFile.cpp \
     Engine/Mesh.cpp \
-    Engine/Model.cpp
+    Engine/Model.cpp \
+    Engine/Light.cpp \
+    Engine/Camera.cpp \
+    Engine/Material.cpp
 
 HEADERS += \
     GL/File.hpp \
     GL/RedGL.hpp \
-    Engine/Engine.hpp
+    Engine/Engine.hpp \
+    DEBUG/Debug.hpp
 
 DISTFILES += \
     GLSL/f_shader.frag \

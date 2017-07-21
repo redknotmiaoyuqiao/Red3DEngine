@@ -30,7 +30,7 @@ char * TextFile::ReadFile(char * filePath)
         txt = (char *)malloc(FileContent.length() * sizeof(char));
         strcpy(txt,t);
     }else{
-        printf("Impossible to open %s. Are you in the right directory ?\n", filePath);
+        RedLog("Impossible to open %s. Are you in the right directory ?\n", filePath);
         getchar();
 
         txt = nullptr;

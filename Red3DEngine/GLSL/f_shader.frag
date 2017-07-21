@@ -4,6 +4,7 @@ struct Material
 {
     sampler2D diffuse;
     sampler2D specular;
+    sampler2D normalMap;
     float shininess;
 };
 
@@ -25,8 +26,6 @@ out vec4 color;
 uniform Light light;
 uniform Material material;
 uniform vec3 viewPos;
-
-uniform sampler2D normalMap;
 
 void main()
 {

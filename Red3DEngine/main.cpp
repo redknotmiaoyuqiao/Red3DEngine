@@ -23,15 +23,9 @@ GLFWwindow* window;
 int width = 1280;
 int height = 720;
 
-
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  40.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
 
 int main( void )
 {
@@ -99,73 +93,39 @@ int main( void )
     program->AddShader(f_shader);
     program->LinkProgram();
 
-    GLTexture * ambient = new GLTexture();
-    ambient->LoadImage("/Users/redknot/Desktop/Cubeq/Cube/DefaultMaterial_Base_Color.png");
-
-    GLTexture * specular = new GLTexture();
-    specular->LoadImage("/Users/redknot/Desktop/Cubeq/Cube/DefaultMaterial_Roughness.png");
-
-    GLTexture * normal = new GLTexture();
-    normal->LoadImage("/Users/redknot/Desktop/Cubeq/Cube/Cube_DefaultMaterial_Nomal.png");
-
     //std::string path = "/Users/redknot/Desktop/nanosuit/nanosuit.obj";
     //std::string path = "/Users/redknot/Desktop/Face2.FBX";
 
-    std::string path = "/Users/redknot/Desktop/Cubeq/Cube.FBX";
+    //std::string path = "/Users/redknot/Desktop/Cubeq/Cube.FBX";
+    std::string path = "/Users/redknot/Desktop/nano";
     Model * m = new Model(path);
+
+    //light
+    Light * light = new Light();
+    light->setAmbient(1.0f);
+    light->setDiffuse(0.9f);
+    light->setSpecular(1.0f);
+    light->setPosition(800.0f);
+
+    //Camera
+    Camera * mainCamera = new Camera(30.0f,width * 1.0f,height * 1.0f,0.1f,1000.0f);
+    mainCamera->setCameraPos(0.0f, 8.0f,  40.0f);
+    mainCamera->setCameraFront(0.0f, 0.0f, -1.0f);
+    mainCamera->setCameraUp(0.0f, 1.0f,  0.0f);
 
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 model;
-        model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * 30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-        glm::mat4 view;
-        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(30.0f), width / (height * 1.0f), 0.1f, 100.0f);
-
         program->UseProgram();
 
+        mainCamera->UseCamera(program);
+        light->UseLight(program);
+
+        glm::mat4 model;
+        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * 80.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(program->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(program->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-
-
-
-        glUniform3f(program->GetUniformLocation("viewPos"),  cameraPos[0],cameraPos[1],cameraPos[2]);
-
-
-
-
-
-
-
-        //material
-        glActiveTexture(GL_TEXTURE0); //在绑定纹理之前先激活纹理单元
-        glBindTexture(GL_TEXTURE_2D, ambient->TextureId);
-        glUniform1i(program->GetUniformLocation("material.ambient"), 0);
-
-        glActiveTexture(GL_TEXTURE1); //在绑定纹理之前先激活纹理单元
-        glBindTexture(GL_TEXTURE_2D, specular->TextureId);
-        glUniform1i(program->GetUniformLocation("material.specular"), 1);
-
-        glActiveTexture(GL_TEXTURE2); //在绑定纹理之前先激活纹理单元
-        glBindTexture(GL_TEXTURE_2D, normal->TextureId);
-        glUniform1i(program->GetUniformLocation("normalMap"), 2);
-
-        glUniform1f(program->GetUniformLocation("material.shininess"), 32.0f);
-
-        //light
-        glUniform3f(program->GetUniformLocation("light.ambient"), 0.2f, 0.2f, 0.2f);
-        glUniform3f(program->GetUniformLocation("light.diffuse"), 0.9f, 0.9f, 0.9f);// 让我们把这个光调暗一点，这样会看起来更自然
-        glUniform3f(program->GetUniformLocation("light.specular"), 1.0f, 1.0f, 1.0f);
-        glUniform3f(program->GetUniformLocation("light.position"),  10.0f, 10.0f, 10.0f);
-
 
         m->Draw(program);
 
@@ -177,14 +137,16 @@ int main( void )
     //glDeleteVertexArrays(1, &VertexArrayID);
     //glDeleteProgram(programID);
 
+    delete mainCamera;
+
     delete v_shader;
     delete f_shader;
     delete program;
 
-    delete ambient;
-    delete specular;
-
     delete m;
+
+    delete light;
+
 
     glfwTerminate();
 
@@ -193,6 +155,7 @@ int main( void )
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+    /*
     GLfloat cameraSpeed = 0.3f;
     if(key == GLFW_KEY_W)
         cameraPos += cameraSpeed * cameraFront;
@@ -202,6 +165,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if(key == GLFW_KEY_D)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        */
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

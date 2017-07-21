@@ -3,8 +3,6 @@
 GLProgram::GLProgram()
 {
     ProgramId = glCreateProgram();
-
-    printf("%d",ProgramId);
 }
 
 void GLProgram::AddShader(GLShader * shader)

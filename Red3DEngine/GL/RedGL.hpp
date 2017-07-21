@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DEBUG/Debug.hpp"
 #include <GL/glew.h>
 #include <vector>
 #include "stdio.h"
@@ -36,6 +37,7 @@ public:
     GLuint TextureId;
 
     GLTexture();
+    ~GLTexture();
     void LoadImage(char * filePath);
     void SetData(unsigned char * data,int width,int height,GLenum internalFormat,GLenum format);
 };
