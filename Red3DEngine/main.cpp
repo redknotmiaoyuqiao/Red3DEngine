@@ -17,6 +17,7 @@
 #include "GL/File.hpp"
 
 #include "Engine/Engine.hpp"
+#include "Engine/RedGame.hpp"
 
 GLFWwindow* window;
 
@@ -55,6 +56,8 @@ int main( void )
     }
     glfwMakeContextCurrent(window);
 
+    glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+
     // Set the required callback functions
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -71,82 +74,20 @@ int main( void )
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-    //背面剔除
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
-    //深度测试
-    glEnable(GL_DEPTH_TEST);
 
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    TextFile * readFile = new TextFile();
-    char * v_shader_code = readFile->ReadFile("/Users/redknot/Red3DEngine/Red3DEngine/GLSL/v_shader.vert");
-    char * f_shader_code = readFile->ReadFile("/Users/redknot/Red3DEngine/Red3DEngine/GLSL/f_shader.frag");
-    delete readFile;
-
-    GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,v_shader_code);
-    GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,f_shader_code);
-
-    GLProgram * program = new GLProgram();
-    program->AddShader(v_shader);
-    program->AddShader(f_shader);
-    program->LinkProgram();
-
-    //std::string path = "/Users/redknot/Desktop/nanosuit/nanosuit.obj";
-    //std::string path = "/Users/redknot/Desktop/Face2.FBX";
-
-    //std::string path = "/Users/redknot/Desktop/Cubeq/Cube.FBX";
-    std::string path = "/Users/redknot/Desktop/nano";
-    Model * m = new Model(path);
-
-    //light
-    Light * light = new Light();
-    light->setAmbient(1.0f);
-    light->setDiffuse(0.9f);
-    light->setSpecular(1.0f);
-    light->setPosition(800.0f);
-
-    //Camera
-    Camera * mainCamera = new Camera(30.0f,width * 1.0f,height * 1.0f,0.1f,1000.0f);
-    mainCamera->setCameraPos(0.0f, 8.0f,  40.0f);
-    mainCamera->setCameraFront(0.0f, 0.0f, -1.0f);
-    mainCamera->setCameraUp(0.0f, 1.0f,  0.0f);
+    RedGame * redgame = new RedGame(width,height);
+    redgame->Start();
 
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )
     {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        program->UseProgram();
-
-        mainCamera->UseCamera(program);
-        light->UseLight(program);
-
-        glm::mat4 model;
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * 80.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-
-        m->Draw(program);
+        redgame->Update();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    //glDeleteBuffers(1, &vertexbuffer);
-    //glDeleteVertexArrays(1, &VertexArrayID);
-    //glDeleteProgram(programID);
-
-    delete mainCamera;
-
-    delete v_shader;
-    delete f_shader;
-    delete program;
-
-    delete m;
-
-    delete light;
-
+    redgame->End();
+    delete redgame;
 
     glfwTerminate();
 

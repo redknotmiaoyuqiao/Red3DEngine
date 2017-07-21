@@ -10,22 +10,22 @@ win32
 
 unix:!macx
 {
-#    LIBS += -lglfw
-#    LIBS += -lGLEW
-#    LIBS += -lGL
-#    LIBS += -lSOIL
-#    LIBS += -lassimp
+    LIBS += -lglfw
+    LIBS += -lGLEW
+    LIBS += -lGL
+    LIBS += -lSOIL
+    LIBS += -lassimp
 }
 
 unix:macx
 {
-    LIBS+= -framework opengl
-    LIBS+= -framework Cocoa -framework IOKit -framework CoreVideo
+#    LIBS+= -framework opengl
+#    LIBS+= -framework Cocoa -framework IOKit -framework CoreVideo
 
-    LIBS+= -L/usr/local/lib -lglfw3
-    LIBS+= -L/usr/local/lib -lGLEW
-    LIBS+= -L/usr/local/lib -lSOIL
-    LIBS+= -L/usr/local/lib -lassimp
+#    LIBS+= -L/usr/local/lib -lglfw3
+#    LIBS+= -L/usr/local/lib -lGLEW
+#    LIBS+= -L/usr/local/lib -lSOIL
+#    LIBS+= -L/usr/local/lib -lassimp
 }
 
 INCLUDEPATH += /usr/local/include
@@ -47,7 +47,11 @@ HEADERS += \
     GL/File.hpp \
     GL/RedGL.hpp \
     Engine/Engine.hpp \
-    DEBUG/Debug.hpp
+    DEBUG/Debug.hpp \
+    Engine/RedGame.hpp \
+    Engine/RedScript.hpp \
+    RedGameEnging.hpp \
+    User/MyNano.hpp
 
 DISTFILES += \
     GLSL/f_shader.frag \
