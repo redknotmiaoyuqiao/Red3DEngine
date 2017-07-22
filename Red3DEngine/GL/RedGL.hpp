@@ -1,7 +1,12 @@
 #pragma once
 
 #include "DEBUG/Debug.hpp"
+#ifdef __ANDROID__
+#include <EGL/egl.h>
+#include <GLES3/gl3.h>
+#else
 #include <GL/glew.h>
+#endif
 #include <vector>
 #include "stdio.h"
 
@@ -59,5 +64,3 @@ public:
     void DrawVAO();
     void DeleteVAO();
 };
-
-

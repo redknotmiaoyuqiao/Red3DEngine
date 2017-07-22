@@ -1,4 +1,4 @@
-#version 330 core
+#version 330
 
 struct Material
 {
@@ -38,6 +38,7 @@ void main()
 
     // 环境光
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
+    // vec3 ambient = light.ambient * vec3(1.0f,0.0f,0.0f);
 
     // 漫反射光
     vec3 norm = normalize(Normal);
@@ -54,6 +55,9 @@ void main()
     vec3 result = ambient + diffuse + specular;
     color = vec4(result, 1.0f);
 
-    //color = vec4(Normal, 1.0f);
+    //color = vec4(diffuse, 1.0f);
 
+    //color = vec4(ambient,1.0);
+
+    //color = vec4(ambient,1.0);
 }

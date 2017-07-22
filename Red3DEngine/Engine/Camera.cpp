@@ -20,6 +20,15 @@ Camera::~Camera()
     delete cameraUp;
 }
 
+void Camera::setCamera(float fovy,float width,float height,float near,float far)
+{
+    this->width = width;
+    this->height = height;
+    this->fovy = fovy;
+    this->near = near;
+    this->far = far;
+}
+
 void Camera::setCameraPos(float x,float y,float z)
 {
     cameraPos[0] = x;

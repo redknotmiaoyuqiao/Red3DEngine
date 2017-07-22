@@ -1,0 +1,22 @@
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := red3dengine
+
+LOCAL_LDLIBS := -llog -landroid -lEGL -lGLESv3 -lz
+LOCAL_CFLAGS := -std=c++11
+
+$(warning $(LOCAL_PATH))
+
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../DEBUG/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../Engine/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../GL/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../glm/
+
+LOCAL_SRC_FILES := interface.cpp
+
+LOCAL_STATIC_LIBRARIES += libGL
+LOCAL_STATIC_LIBRARIES += libEngine
+
+include $(BUILD_SHARED_LIBRARY)

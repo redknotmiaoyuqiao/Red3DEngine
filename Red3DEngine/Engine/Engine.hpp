@@ -1,16 +1,26 @@
 #pragma once
 
+#ifdef __ANDROID__
+#include <EGL/egl.h>
+#include <GLES3/gl3.h>
+#else
 #include <GL/glew.h>
+#endif
+
 #include <iostream>
 #include <vector>
 #include <string>
 
+#include <stdint.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
 #include "GL/RedGL.hpp"
 #include "DEBUG/Debug.hpp"
+
+static int ScreenWidth = 0;
+static int ScreenHeight = 0;
 
 typedef struct Vertex
 {
@@ -119,6 +129,8 @@ private:
 public:
     Camera(float fovy,float width,float height,float near,float far);
     ~Camera();
+
+    void setCamera(float fovy,float width,float height,float near,float far);
 
     void setCameraPos(float x,float y,float z);
     void setCameraFront(float x,float y,float z);

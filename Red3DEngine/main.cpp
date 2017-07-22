@@ -75,7 +75,13 @@ int main( void )
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 
-    RedGame * redgame = new RedGame(width,height);
+    //Screen::width = width;
+    //Screen::height = height;
+
+    ScreenWidth = width;
+    ScreenHeight = height;
+
+    RedGame * redgame = new RedGame();
     redgame->Start();
 
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )

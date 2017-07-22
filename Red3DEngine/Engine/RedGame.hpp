@@ -3,23 +3,14 @@
 #include "GL/RedGL.hpp"
 #include "Engine/RedScript.hpp"
 
-#include "User/MyNano.hpp"
-
 class RedGame
 {
 public:
+    RedScript * redScript;
 
-    int width;
-    int height;
-
-    RedScript * nano;
-
-    RedGame(int width,int height)
+    RedGame()
     {
-        this->width = width;
-        this->height = height;
-
-        nano = new MyNano();
+        redScript = new RedScript();
     }
 
     void Start()
@@ -33,17 +24,19 @@ public:
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        nano->Start();
+        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+        redScript->Start();
     }
 
     void Update()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        nano->Update();
+        redScript->Update();
     }
 
     void End()
     {
-        nano->End();
+        redScript->End();
     }
 };
