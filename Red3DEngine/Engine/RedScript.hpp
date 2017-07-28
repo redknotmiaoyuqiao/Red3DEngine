@@ -2,6 +2,8 @@
 
 #include "GL/File.hpp"
 
+#include "SHADER/Shader.hpp"
+
 class RedScript
 {
 public:
@@ -12,30 +14,21 @@ public:
     Camera * mainCamera;
 
     void Start(){
-      TextFile * readFile = new TextFile();
 
-      char * v_shader_code = readFile->ReadFile("/Users/redknot/Red3DEngine/Red3DEngine/GLSL/v_shader.vert");
-      char * f_shader_code = readFile->ReadFile("/Users/redknot/Red3DEngine/Red3DEngine/GLSL/f_shader.frag");
-
-      //char * v_shader_code = readFile->ReadFile("/storage/emulated/0/3D/GLSL/v_shader.vert");
-      //char * f_shader_code = readFile->ReadFile("/storage/emulated/0/3D/GLSL/f_shader.frag");
-
-      delete readFile;
-
-
-      //char * v_shader_code = "void main()";
-      //char * f_shader_code = "void main()";
-
-      GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,v_shader_code);
-      GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,f_shader_code);
+      GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,PHONG_VERTEX);
+      GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,PHONG_FRAGMENT);
 
       program = new GLProgram();
       program->AddShader(v_shader);
       program->AddShader(f_shader);
       program->LinkProgram();
 
-        std::string path = "/Users/redknot/Red3DEngine/3dModel/nano";
-      //std::string path = "/storage/emulated/0/3D/nano";
+#ifdef __ANDROID__
+      std::string path = "/storage/emulated/0/3D/nano";
+#else
+      std::string path = "/Users/redknot/Red3DEngine/3dModel/nano";
+#endif
+
       m = new Model(path);
 
       //light
@@ -43,7 +36,7 @@ public:
       light->setAmbient(1.0f);
       light->setDiffuse(1.3f);
       light->setSpecular(100.3f);
-      light->setPosition(800.0f);
+      light->setPosition(20.0f);
 
       //Camera
       int width = 1280;

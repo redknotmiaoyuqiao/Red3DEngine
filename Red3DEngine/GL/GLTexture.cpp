@@ -5,7 +5,7 @@
 #ifdef __ANDROID__
 
 #else
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 #endif
 
 

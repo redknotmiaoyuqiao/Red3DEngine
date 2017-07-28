@@ -51,7 +51,8 @@ HEADERS += \
     Engine/RedGame.hpp \
     Engine/RedScript.hpp \
     User/MyNano.hpp \
-    RedGameEngine.hpp
+    RedGameEngine.hpp \
+    SHADER/Shader.hpp
 
 DISTFILES += \
     GLSL/f_shader.frag \

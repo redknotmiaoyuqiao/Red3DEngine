@@ -79,7 +79,7 @@ Model::Model(std::string path)
         mm->setAmbient(ambient);
         mm->setSpecular(specular);
         mm->setNormalMap(normal);
-        mm->setShininess(80.0f);
+        mm->setShininess(0.5f);
 
         Mesh * mesh = new Mesh(vertices,indices);
         mesh->setMaterial(mm);

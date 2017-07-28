@@ -54,6 +54,25 @@ public:
     void UseMaterial(GLProgram * program);
 };
 
+class PhongMaterial
+{
+private:
+    GLProgram * phongProgram;
+    GLTexture * ambient;
+    GLTexture * specular;
+    GLTexture * normalMap;
+    float shininess;
+public:
+    PhongMaterial();
+    ~PhongMaterial();
+
+    void setAmbient(GLTexture * ambient);
+    void setSpecular(GLTexture * specular);
+    void setNormalMap(GLTexture * normalMap);
+    void setShininess(float shininess);
+
+    void UseMaterial();
+};
 
 class Mesh
 {

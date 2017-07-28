@@ -66,8 +66,12 @@ unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * ima
     png_bytep * row_pointers = png_get_rows(png_ptr, info_ptr);
 
     int pos = (width * height * 4) - (4 * width);
-    for(int row = 0; row < height; row++)
+
+
+
+    for(int t_row = 0; t_row < height; t_row++)
     {
+        int row = height - t_row - 1;
         for(int col = 0; col < (4 * width); col += 4)
          {
              rgba[pos++] = row_pointers[row][col];        // red
