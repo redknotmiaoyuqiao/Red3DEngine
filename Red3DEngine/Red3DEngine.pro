@@ -24,7 +24,6 @@ unix:macx
 
     LIBS+= -L/usr/local/lib -lglfw3
     LIBS+= -L/usr/local/lib -lGLEW
-    LIBS+= -L/usr/local/lib -lSOIL
     LIBS+= -L/usr/local/lib -lassimp
 }
 
@@ -41,7 +40,11 @@ SOURCES += main.cpp \
     Engine/Model.cpp \
     Engine/Light.cpp \
     Engine/Camera.cpp \
-    Engine/Material.cpp
+    Engine/Material.cpp \
+    SOIL/image_DXT.c \
+    SOIL/image_helper.c \
+    SOIL/SOIL.c \
+    SOIL/stb_image_aug.c
 
 HEADERS += \
     GL/File.hpp \
@@ -52,7 +55,13 @@ HEADERS += \
     Engine/RedScript.hpp \
     User/MyNano.hpp \
     RedGameEngine.hpp \
-    SHADER/Shader.hpp
+    SHADER/Shader.hpp \
+    SOIL/image_DXT.h \
+    SOIL/image_helper.h \
+    SOIL/SOIL.h \
+    SOIL/stb_image_aug.h \
+    SOIL/stbi_DDS_aug_c.h \
+    SOIL/stbi_DDS_aug.h
 
 DISTFILES += \
     GLSL/f_shader.frag \

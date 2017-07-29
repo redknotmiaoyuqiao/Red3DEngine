@@ -3,7 +3,7 @@
 #include "GL/File.hpp"
 
 #ifdef __ANDROID__
-
+#include <SOIL/SOIL.h>
 #else
 #include <SOIL/SOIL.h>
 #endif
@@ -31,18 +31,6 @@ void GLTexture::LoadImage(char * filePath)
 {
     glBindTexture(GL_TEXTURE_2D, TextureId);
 
-    #ifdef __ANDROID__
-    int width, height;
-
-    ImageFile * readImage = new ImageFile();
-    unsigned char* image = readImage->ReadImage(filePath,&width,&height);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-    RedLog("-------------LoadImage Start-------------\n");
-    RedLog("Path:%s\n",filePath);
-    RedLog("width:%d\nheight:%d\n",width,height);
-    RedLog("-------------LoadImage End---------------\n\n\n\n");
-
-    #else
     int width, height;
     unsigned char * image = SOIL_load_image(filePath, &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -53,7 +41,6 @@ void GLTexture::LoadImage(char * filePath)
     RedLog("-------------LoadImage End---------------\n\n\n\n");
 
     SOIL_free_image_data(image);
-    #endif
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }

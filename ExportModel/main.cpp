@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     string out = "/Users/redknot/Desktop/nano/";
 
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
     if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -69,6 +69,13 @@ void loadMesh(aiMesh * paiMesh,int index,string out){
         normalArray[i * 3 + 2] = paiMesh->mNormals[i].z;
     }
 
+    float * tangentsArray = (float *) malloc(sizeof(float) * numVertices * 3);
+    for(int i=0;i<numVertices;i++){
+        tangentsArray[i * 3] = paiMesh->mTangents[i].x;
+        tangentsArray[i * 3 + 1] = paiMesh->mTangents[i].y;
+        tangentsArray[i * 3 + 2] = paiMesh->mTangents[i].z;
+    }
+
     FILE * pFile = fopen((out + "part" + intToString(index)).c_str(), "wb");
 
     printf("numVertices:%d\n",numVertices);
@@ -83,6 +90,8 @@ void loadMesh(aiMesh * paiMesh,int index,string out){
     fwrite(vertexArray, 1, sizeof(float) * numVertices * 3, pFile);
     //法线
     fwrite(normalArray, 1, sizeof(float) * numVertices * 3, pFile);
+    //正切空间
+    fwrite(tangentsArray, 1, sizeof(float) * numVertices * 3, pFile);
     //Index
     fwrite(indicesArray, 1, sizeof(unsigned int) * indicesNum * 3, pFile);
 }

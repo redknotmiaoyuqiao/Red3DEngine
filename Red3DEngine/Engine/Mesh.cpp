@@ -8,6 +8,7 @@ Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices)
     arrayVertices = (float *)malloc(sizeof(float) * vertices->size() * 3);
     arrayNormals = (float *)malloc(sizeof(float) * vertices->size() * 3);
     arrayTxtcoor = (float *)malloc(sizeof(float) * vertices->size() * 3);
+    tangentsArray = (float *)malloc(sizeof(float) * vertices->size() * 3);
 
     arrayIndices = (unsigned int * ) malloc(sizeof(unsigned int) * indices->size());
 
@@ -27,6 +28,10 @@ Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices)
         arrayTxtcoor[i * 3] = (*vertices)[i]->TexCoords_x;
         arrayTxtcoor[i * 3 + 1] = (*vertices)[i]->TexCoords_y;
         arrayTxtcoor[i * 3 + 2] = 0.0f;
+
+        tangentsArray[i * 3] = (*vertices)[i]->Tangents_x;
+        tangentsArray[i * 3 + 1] = (*vertices)[i]->Tangents_y;
+        tangentsArray[i * 3 + 2] = (*vertices)[i]->Tangents_z;
     }
 
     /*
@@ -59,6 +64,7 @@ Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices)
     vao->AddVBO(arrayVertices,sizeof(float) * vertices->size() * 3,0,3);
     vao->AddVBO(arrayNormals,sizeof(float) * vertices->size() * 3,1,3);
     vao->AddVBO(arrayTxtcoor,sizeof(float) * vertices->size() * 3,2,3);
+    vao->AddVBO(tangentsArray,sizeof(float) * vertices->size() * 3,3,3);
     vao->SetEBO(arrayIndices,sizeof(unsigned int) * indices->size());
 }
 
@@ -76,6 +82,7 @@ Mesh::~Mesh()
     free(arrayVertices);
     free(arrayNormals);
     free(arrayTxtcoor);
+    free(tangentsArray);
 
     delete this->material;
 }

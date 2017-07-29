@@ -25,6 +25,7 @@ public:
 
 #ifdef __ANDROID__
       std::string path = "/storage/emulated/0/3D/nano";
+      //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
 #else
       std::string path = "/Users/redknot/Red3DEngine/3dModel/nano";
 #endif
@@ -33,9 +34,9 @@ public:
 
       //light
       light = new Light();
-      light->setAmbient(1.0f);
-      light->setDiffuse(1.3f);
-      light->setSpecular(100.3f);
+      light->setAmbient(0.9f);
+      light->setDiffuse(2.3f);
+      light->setSpecular(100.0f);
       light->setPosition(20.0f);
 
       //Camera

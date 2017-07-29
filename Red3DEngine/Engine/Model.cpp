@@ -25,12 +25,14 @@ Model::Model(std::string path)
         float * vertexArray = (float *)malloc(sizeof(float) * numVertices * 3);
         float * textureCoordArray = (float *)malloc(sizeof(float) * numVertices * 3);
         float * normalArray = (float *)malloc(sizeof(float) * numVertices * 3);
+        float * tangentsArray = (float *)malloc(sizeof(float) * numVertices * 3);
 
         unsigned int * indicesArray = (unsigned int *)malloc(sizeof(unsigned int) * numFaces * 3);
 
         fread(textureCoordArray,sizeof(float) * 3,numVertices,fb);
         fread(vertexArray,sizeof(float) * 3,numVertices,fb);
         fread(normalArray,sizeof(float) * 3,numVertices,fb);
+        fread(tangentsArray,sizeof(float) * 3,numVertices,fb);
         fread(indicesArray,sizeof(unsigned int),numFaces * 3,fb);
 
         fclose(fb);
@@ -49,6 +51,10 @@ Model::Model(std::string path)
             v->Normal_y = normalArray[i * 3 + 1];
             v->Normal_z = normalArray[i * 3 + 2];
 
+            v->Tangents_x = tangentsArray[i * 3];
+            v->Tangents_y = tangentsArray[i * 3 + 1];
+            v->Tangents_z = tangentsArray[i * 3 + 2];
+
             v->TexCoords_x = textureCoordArray[i * 3];
             v->TexCoords_y = textureCoordArray[i * 3 + 1];
             vertices->push_back(v);
@@ -61,6 +67,7 @@ Model::Model(std::string path)
         free(vertexArray);
         free(textureCoordArray);
         free(normalArray);
+        free(tangentsArray);
         free(indicesArray);
 
         Material * mm = new Material();

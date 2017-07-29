@@ -32,6 +32,10 @@ typedef struct Vertex
     float Normal_y;
     float Normal_z;
 
+    float Tangents_x;
+    float Tangents_y;
+    float Tangents_z;
+
     float TexCoords_x;
     float TexCoords_y;
 }Vertex;
@@ -84,6 +88,7 @@ private:
     float * arrayVertices;
     float * arrayNormals;
     float * arrayTxtcoor;
+    float * tangentsArray;
 
     unsigned int * arrayIndices;
 

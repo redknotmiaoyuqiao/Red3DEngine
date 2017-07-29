@@ -15,6 +15,7 @@ static const char * PHONG_VERTEX = SHADER(
                 layout (location = 0) in vec3 position;
                 layout (location = 1) in vec3 normal;
                 layout (location = 2) in vec3 txtcoor;
+                layout (location = 3) in vec3 tangentsArray;
 
                 out vec3 FragPos;
                 out vec3 Txtcoor;
