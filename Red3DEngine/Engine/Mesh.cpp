@@ -64,7 +64,7 @@ Mesh::Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices)
     vao->AddVBO(arrayVertices,sizeof(float) * vertices->size() * 3,0,3);
     vao->AddVBO(arrayNormals,sizeof(float) * vertices->size() * 3,1,3);
     vao->AddVBO(arrayTxtcoor,sizeof(float) * vertices->size() * 3,2,3);
-    vao->AddVBO(tangentsArray,sizeof(float) * vertices->size() * 3,3,3);
+    //vao->AddVBO(tangentsArray,sizeof(float) * vertices->size() * 3,3,3);
     vao->SetEBO(arrayIndices,sizeof(unsigned int) * indices->size());
 }
 

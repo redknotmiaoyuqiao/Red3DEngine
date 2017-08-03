@@ -19,6 +19,8 @@
 #include "Engine/Engine.hpp"
 #include "Engine/RedGame.hpp"
 
+#include "Engine/RedScript.hpp"
+
 GLFWwindow* window;
 
 int width = 1280;
@@ -59,9 +61,12 @@ int main( void )
     glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     // Set the required callback functions
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetKeyCallback(window, RedScript::key_callback);
+    glfwSetCursorPosCallback(window, RedScript::mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+
+
+    glfwSetCursorPos(window,width/2.0f,height/2.0f);
 
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
@@ -72,7 +77,8 @@ int main( void )
     }
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    //glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 
     //Screen::width = width;
@@ -98,25 +104,6 @@ int main( void )
     glfwTerminate();
 
     return 0;
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-    /*
-    GLfloat cameraSpeed = 0.3f;
-    if(key == GLFW_KEY_W)
-        cameraPos += cameraSpeed * cameraFront;
-    if(key == GLFW_KEY_S)
-        cameraPos -= cameraSpeed * cameraFront;
-    if(key == GLFW_KEY_A)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if(key == GLFW_KEY_D)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-        */
-}
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
 }
 
 

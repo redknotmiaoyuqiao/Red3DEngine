@@ -13,8 +13,8 @@ string intToString(int v);
 
 int main(int argc, char *argv[])
 {
-    string path = "/Users/redknot/Desktop/nanosuit/nanosuit.obj";
-    string out = "/Users/redknot/Desktop/nano/";
+    string path = "/Users/redknot/Desktop/qiu.FBX";
+    string out = "/Users/redknot/Desktop/qiu/";
 
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);

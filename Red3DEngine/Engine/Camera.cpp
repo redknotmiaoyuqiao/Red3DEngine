@@ -65,5 +65,7 @@ void Camera::UseCamera(GLProgram * program)
     view = glm::lookAt(v_cameraPos, v_cameraPos + v_cameraFront, v_cameraUp);
     glUniformMatrix4fv(program->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
 
+
     glUniform3f(program->GetUniformLocation("viewPos"),  v_cameraPos[0],v_cameraPos[1],v_cameraPos[2]);
+    glUniform3f(program->GetUniformLocation("camPos"),  v_cameraPos[0],v_cameraPos[1],v_cameraPos[2]);
 }

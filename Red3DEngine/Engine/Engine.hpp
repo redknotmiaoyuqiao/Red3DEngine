@@ -112,6 +112,21 @@ public:
     void Draw(GLProgram * program);
 };
 
+
+class PBRLight{
+private:
+    float * position;
+    float * color;
+public:
+    PBRLight();
+    ~PBRLight();
+
+    void setPosition(float x,float y,float z);
+    void setColor(float r,float g,float b);
+
+    void UseLight(GLProgram * program,int i);
+};
+
 class Light{
 private:
     float * ambient;
