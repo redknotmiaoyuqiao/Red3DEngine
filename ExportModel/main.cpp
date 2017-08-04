@@ -13,8 +13,8 @@ string intToString(int v);
 
 int main(int argc, char *argv[])
 {
-    string path = "/Users/redknot/Desktop/qiu.FBX";
-    string out = "/Users/redknot/Desktop/qiu/";
+    string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP.FBX";
+    string out = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
 
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);

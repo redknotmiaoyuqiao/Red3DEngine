@@ -44,6 +44,7 @@ void Material::setShininess(float shininess)
 
 void Material::UseMaterial(GLProgram * program)
 {
+    /*
     if(this->ambient != NULL){
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, this->ambient->TextureId);
@@ -75,4 +76,5 @@ void Material::UseMaterial(GLProgram * program)
     }
 
     glUniform1f(program->GetUniformLocation("material.shininess"), this->shininess);
+    */
 }

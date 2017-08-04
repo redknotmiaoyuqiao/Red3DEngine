@@ -23,8 +23,11 @@
 
 GLFWwindow* window;
 
-int width = 1280;
-int height = 720;
+//int width = 1280;
+//int height = 720;
+
+int width = 2560;
+int height = 1600;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -48,6 +51,9 @@ int main( void )
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
     //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+
+    ScreenWidth = 2560;
+    ScreenHeight = 1600;
 
     window = glfwCreateWindow( width, height, "Red3DEngine", NULL, NULL);
     if( window == NULL ){

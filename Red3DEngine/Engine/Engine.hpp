@@ -78,6 +78,28 @@ public:
     void UseMaterial();
 };
 
+
+class PBRMaterial
+{
+private:
+    GLTexture * albedoMap;
+    GLTexture * metallicMap;
+    GLTexture * roughnessMap;
+    GLTexture * normalMap;
+    GLTexture * aoMap;
+public:
+    PBRMaterial();
+    ~PBRMaterial();
+
+    void setAlbedoMap(GLTexture * albedoMap);
+    void setMetallicMap(GLTexture * metallicMap);
+    void setRoughnessMap(GLTexture * roughnessMap);
+    void setNormalMap(GLTexture * normalMap);
+    void setAoMap(GLTexture * aoMap);
+
+    void UseMaterial();
+};
+
 class Mesh
 {
 private:

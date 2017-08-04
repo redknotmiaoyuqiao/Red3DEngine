@@ -46,6 +46,7 @@ SOURCES += main.cpp \
     SOIL/SOIL.c \
     SOIL/stb_image_aug.c \
     Engine/PBRLight.cpp \
+    Engine/PBRMaterial.cpp
 
 HEADERS += \
     GL/File.hpp \

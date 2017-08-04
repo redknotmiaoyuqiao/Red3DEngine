@@ -26,8 +26,24 @@ public:
     PBRLight * light2;
     PBRLight * light3;
 
+    GLTexture * albedoMap;
+    GLTexture * metallicMap;
+    GLTexture * roughnessMap;
+    GLTexture * normalMap;
+    GLTexture * aoMap;
+
     void Start(){
 
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_M.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_N.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_R.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_AO.png");
 
       //GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,PHONG_VERTEX);
       //GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,PHONG_FRAGMENT);
@@ -44,7 +60,7 @@ public:
       std::string path = "/storage/emulated/0/3D/nano";
       //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
 #else
-      std::string path = "/Users/redknot/Red3DEngine/3dModel/qiu";
+      std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
 #endif
 
       m = new Model(path);
@@ -92,6 +108,28 @@ public:
     void Update(){
         do_movement();
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, this->albedoMap->TextureId);
+        glUniform1i(program->GetUniformLocation("albedoMap"), 0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, this->metallicMap->TextureId);
+        glUniform1i(program->GetUniformLocation("metallicMap"), 1);
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, this->roughnessMap->TextureId);
+        glUniform1i(program->GetUniformLocation("roughnessMap"), 2);
+
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, this->normalMap->TextureId);
+        glUniform1i(program->GetUniformLocation("normalMap"), 3);
+
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, this->aoMap->TextureId);
+        glUniform1i(program->GetUniformLocation("aoMap"), 4);
+
+
+
         mainCamera->setCameraPos(cameraPos.x,cameraPos.y,cameraPos.z);
         mainCamera->setCameraFront(cameraFront.x,cameraFront.y,cameraFront.z);
         mainCamera->setCameraUp(cameraUp.x,cameraUp.y,cameraUp.z);
@@ -110,24 +148,11 @@ public:
         light2->UseLight(program,2);
         light3->UseLight(program,3);
 
-        glUniform3f(program->GetUniformLocation("albedo"),0.5f, 0.0f, 0.0f);
-        glUniform1f(program->GetUniformLocation("ao"),1.0f);
-        glUniform1f(program->GetUniformLocation("metallic"),1.0f);
-        glUniform1f(program->GetUniformLocation("roughness"),0.4f);
-
         glm::mat4 model;
-        for(int i=0;i<7;i++){
-            glUniform1f(program->GetUniformLocation("metallic"),i / 7.0f);
-            for(int j=0;j<7;j++){
-                glUniform1f(program->GetUniformLocation("roughness"),glm::clamp(j / 7.0f, 0.05f, 1.0f));
-                model = glm::mat4();
-                model = glm::translate(model, glm::vec3(
-                    0.0f + i * 1.5f,0.0f + j * 1.5f,0.0f
-                ));
-                glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-                m->Draw(program);
-            }
-        }
+        model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
+        glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+        m->Draw(program);
     }
 
     void End()
@@ -203,7 +228,7 @@ void RedScript::key_callback(GLFWwindow* window, int key, int scancode, int acti
 void do_movement()
 {
     // Camera controls
-    GLfloat cameraSpeed = 0.03f;
+    GLfloat cameraSpeed = 0.07f;
     if (keys[GLFW_KEY_W])
         cameraPos += cameraSpeed * cameraFront;
     if (keys[GLFW_KEY_S])
