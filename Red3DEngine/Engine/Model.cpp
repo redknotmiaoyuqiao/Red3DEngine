@@ -71,7 +71,7 @@ Model::Model(std::string path)
         free(indicesArray);
 
         Material * mm = new Material();
-
+        /*
         std::string imagePath = path + "/part" + intToString(index);
 
         GLTexture * ambient = new GLTexture();
@@ -87,6 +87,7 @@ Model::Model(std::string path)
         mm->setSpecular(specular);
         mm->setNormalMap(normal);
         mm->setShininess(0.5f);
+        */
 
         Mesh * mesh = new Mesh(vertices,indices);
         mesh->setMaterial(mm);

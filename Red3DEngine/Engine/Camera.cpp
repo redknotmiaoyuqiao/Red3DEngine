@@ -50,6 +50,25 @@ void Camera::setCameraUp(float x,float y,float z)
     cameraUp[2] = z;
 }
 
+void Camera::UseCameraInSky(GLProgram * program)
+{
+    glm::vec3 v_cameraPos   = glm::vec3(cameraPos[0], cameraPos[1],  cameraPos[2]);
+    glm::vec3 v_cameraFront = glm::vec3(cameraFront[0], cameraFront[1], cameraFront[2]);
+    glm::vec3 v_cameraUp    = glm::vec3(cameraUp[0], cameraUp[1],  cameraUp[2]);
+
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(this->fovy), width / (height * 1.0f), near, far);
+
+    glUniformMatrix4fv(program->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    glm::mat4 view;
+    view = glm::lookAt(v_cameraPos, v_cameraPos + v_cameraFront, v_cameraUp);
+
+    view = glm::mat4(glm::mat3(view));
+
+    glUniformMatrix4fv(program->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+}
+
 void Camera::UseCamera(GLProgram * program)
 {
     glm::vec3 v_cameraPos   = glm::vec3(cameraPos[0], cameraPos[1],  cameraPos[2]);

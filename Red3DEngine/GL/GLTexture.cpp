@@ -1,13 +1,6 @@
 #include "RedGL.hpp"
-
+#include <GL/glew.h>
 #include "GL/File.hpp"
-
-#ifdef __ANDROID__
-#include <SOIL/SOIL.h>
-#else
-#include <SOIL/SOIL.h>
-#endif
-
 
 GLTexture::GLTexture()
 {
@@ -32,17 +25,15 @@ void GLTexture::LoadImage(char * filePath)
     glBindTexture(GL_TEXTURE_2D, TextureId);
 
     int width, height;
-    unsigned char * image = SOIL_load_image(filePath, &width, &height, 0, SOIL_LOAD_RGB);
+
+    ImageFile * imageFile = new ImageFile();
+    unsigned char * image = imageFile->ReadImage(filePath,&width,&height);
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-
-    RedLog("-------------LoadImage Start-------------\n");
-    RedLog("Path:%s\n",filePath);
-    RedLog("width:%d\nheight:%d\n",width,height);
-    RedLog("-------------LoadImage End---------------\n\n\n\n");
-
-    SOIL_free_image_data(image);
-
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    delete imageFile;
+    free(image);
 }
 
 void GLTexture::SetData(unsigned char * data,int width,int height,GLenum internalFormat,GLenum format)

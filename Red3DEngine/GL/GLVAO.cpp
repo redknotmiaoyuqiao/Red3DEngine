@@ -40,7 +40,7 @@ void GLVAO::AddVBO(GLfloat * VBOdata,int bufferSize,int layout,int size)
 
 void GLVAO::DrawVAO()
 {
-    glBindVertexArray(0);
+    //glBindVertexArray(0);
     glBindVertexArray(VAOId);
     glDrawElements(GL_TRIANGLES, DrawTime, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

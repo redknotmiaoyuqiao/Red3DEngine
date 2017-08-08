@@ -1,3 +1,5 @@
+#pragma once
+
 #define	STRINGIZE(x)	#x
 
 #ifdef __ANDROID__
@@ -191,9 +193,34 @@ static const char * PBR_FRAGMENT = SHADER(
 
 
 
+static const char * SKY_VERTEX = SHADER(
+                layout (location = 0) in vec3 aPos;
 
+                out vec3 TexCoords;
 
+                uniform mat4 projection;
+                uniform mat4 view;
 
+                void main()
+                {
+                    TexCoords = aPos;
+                    gl_Position = projection * view * vec4(aPos, 1.0);
+                }
+            );
+
+static const char * SKY_FRAGMENT = SHADER(
+                out vec4 FragColor;
+
+                in vec3 TexCoords;
+
+                uniform samplerCube skybox;
+
+                void main()
+                {
+                    FragColor = vec4(TexCoords,1.0);
+                    FragColor = texture(skybox, TexCoords);
+                }
+            );
 
 
 static const char * PHONG_VERTEX = SHADER(

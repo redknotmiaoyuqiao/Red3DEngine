@@ -1,12 +1,26 @@
 #include "File.hpp"
-
-#include <png.h>
+#include "DEBUG/Debug.hpp"
+#include <SOIL/SOIL.h>
 
 ImageFile::ImageFile()
 {
 
 }
 
+
+unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * image_height)
+{
+    unsigned char * image = SOIL_load_image(filePath, image_width, image_height, 0, SOIL_LOAD_RGB);
+
+    RedLog("-------------LoadImage Start-------------\n");
+    RedLog("Path:%s\n",filePath);
+    RedLog("width:%d\nheight:%d\n",*image_width,*image_height);
+    RedLog("-------------LoadImage End---------------\n\n\n\n");
+
+    return image;
+}
+
+/*
 unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * image_height)
 {
     *image_width = 8888;
@@ -22,7 +36,6 @@ unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * ima
     png_byte bit_depth;
     png_colorp palette;
 
-    /* open file and test for it being a png */
     FILE * file = fopen(filePath, "rb");
     if(file == NULL){
         RedLog("RedFile Fail");
@@ -37,7 +50,6 @@ unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * ima
         return NULL;
     }
 
-    /* initialise structures for reading a png file */
     png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     info_ptr = png_create_info_struct(png_ptr);
     if (setjmp(png_jmpbuf(png_ptr)))
@@ -51,10 +63,6 @@ unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * ima
     png_init_io(png_ptr, file);
     png_set_sig_bytes(png_ptr, 8);  //Required!!!
 
-    /* **************************************************
-        * The high-level read interface in libpng (http://www.libpng.org/pub/png/libpng-1.2.5-manual.html)
-        * **************************************************
-        */
     png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_EXPAND, 0);
     width = info_ptr->width;
     height = info_ptr->height;
@@ -92,3 +100,4 @@ unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * ima
 
     return res;
 }
+*/

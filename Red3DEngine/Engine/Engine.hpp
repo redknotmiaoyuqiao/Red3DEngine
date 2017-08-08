@@ -97,7 +97,7 @@ public:
     void setNormalMap(GLTexture * normalMap);
     void setAoMap(GLTexture * aoMap);
 
-    void UseMaterial();
+    void UseMaterial(GLProgram * program);
 };
 
 class Mesh
@@ -198,4 +198,19 @@ public:
     void setCameraUp(float x,float y,float z);
 
     void UseCamera(GLProgram * program);
+    void UseCameraInSky(GLProgram * program);
+};
+
+class SkyBox
+{
+private:
+    GLCubeMapTexture * cubMap;
+    GLVAO * skyVAO;
+public:
+    SkyBox();
+    ~SkyBox();
+
+    void loadTexture(vector<std::string> * faces);
+
+    void UseSkyBox(GLProgram * gragram,Camera * camera);
 };

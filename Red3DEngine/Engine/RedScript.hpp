@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SOIL/SOIL.h>
+
 #include "GL/File.hpp"
 #include "GLFW/glfw3.h"
 #include "Engine/Engine.hpp"
@@ -13,10 +15,30 @@ bool keys[1024];
 
 void do_movement();
 
+GLfloat vertices[] = {
+        1.0f, 1.0, 0.0f,   // 右上角
+        1.0f, -1.0f, 0.0f,  // 右下角
+        -1.0f, -1.0f, 0.0f, // 左下角
+        -1.0f, 1.0f, 0.0f   // 左上角
+    };
+
+    GLuint indices[] = { // 注意索引从0开始!
+        3, 1, 0, // 第一个三角形
+        3, 2, 1  // 第二个三角形
+    };
+
+    GLfloat txtcoor[] = {
+        1.0f, 1.0, 0.0f,   // 右上角
+        1.0f, 0.0f, 0.0f,  // 右下角
+        0.0f, 0.0f, 0.0f, // 左下角
+        0.0f, 1.0f, 0.0f   // 左上角
+    };
+
 class RedScript
 {
 public:
     GLProgram * program;
+    GLProgram * sky_program;
     Model * m;
     Camera * mainCamera;
 
@@ -32,8 +54,13 @@ public:
     GLTexture * normalMap;
     GLTexture * aoMap;
 
-    void Start(){
+    PBRMaterial * pbrMaterial;
 
+    GLVAO * sky_vao;
+
+    SkyBox * skybox;
+
+    void Start(){
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
         metallicMap = new GLTexture();
@@ -45,25 +72,41 @@ public:
         aoMap = new GLTexture();
         aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_AO.png");
 
-      //GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,PHONG_VERTEX);
-      //GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,PHONG_FRAGMENT);
+        pbrMaterial = new PBRMaterial();
+        pbrMaterial->setAlbedoMap(albedoMap);
+        pbrMaterial->setMetallicMap(metallicMap);
+        pbrMaterial->setNormalMap(normalMap);
+        pbrMaterial->setRoughnessMap(roughnessMap);
+        pbrMaterial->setAoMap(aoMap);
 
-      GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,PBR_VERTEX);
-      GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,PBR_FRAGMENT);
 
-      program = new GLProgram();
-      program->AddShader(v_shader);
-      program->AddShader(f_shader);
-      program->LinkProgram();
+
+        GLShader * sky_v_shader = new GLShader(GL_VERTEX_SHADER,SKY_VERTEX);
+        GLShader * sky_f_shader = new GLShader(GL_FRAGMENT_SHADER,SKY_FRAGMENT);
+
+        sky_program = new GLProgram();
+        sky_program->AddShader(sky_v_shader);
+        sky_program->AddShader(sky_f_shader);
+        sky_program->LinkProgram();
+
+
+
+        GLShader * v_shader = new GLShader(GL_VERTEX_SHADER,PBR_VERTEX);
+        GLShader * f_shader = new GLShader(GL_FRAGMENT_SHADER,PBR_FRAGMENT);
+
+        program = new GLProgram();
+        program->AddShader(v_shader);
+        program->AddShader(f_shader);
+        program->LinkProgram();
 
 #ifdef __ANDROID__
-      std::string path = "/storage/emulated/0/3D/nano";
-      //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
+        std::string path = "/storage/emulated/0/3D/nano";
+        //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
 #else
-      std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
+        std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
 #endif
 
-      m = new Model(path);
+        m = new Model(path);
 
         //light
         light0 = new PBRLight();
@@ -88,7 +131,7 @@ public:
         int height = 720;
 
         cameraPos.x = 0.0f;
-        cameraPos.y = 5.0f;
+        cameraPos.y = 0.0f;
         cameraPos.z = 30.0f;
 
         cameraFront.x = 0.0f;
@@ -101,58 +144,65 @@ public:
 
         mainCamera = new Camera(30.0f,width * 1.0f,height * 1.0f,0.1f,1000.0f);
 
+        //绘制天空盒子
+        vector<std::string> faces =
+        {
+            "/Users/redknot/Red3DEngine/Texture/SkyBox/right.jpg",
+            "/Users/redknot/Red3DEngine/Texture/SkyBox/left.jpg",
+            "/Users/redknot/Red3DEngine/Texture/SkyBox/top.jpg",
+            "/Users/redknot/Red3DEngine/Texture/SkyBox/bottom.jpg",
+            "/Users/redknot/Red3DEngine/Texture/SkyBox/back.jpg",
+            "/Users/redknot/Red3DEngine/Texture/SkyBox/front.jpg"
+        };
+        skybox = new SkyBox();
+        skybox->loadTexture(&faces);
     }
 
     float w = 0.0f;
 
     void Update(){
+
         do_movement();
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->albedoMap->TextureId);
-        glUniform1i(program->GetUniformLocation("albedoMap"), 0);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, this->metallicMap->TextureId);
-        glUniform1i(program->GetUniformLocation("metallicMap"), 1);
-
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, this->roughnessMap->TextureId);
-        glUniform1i(program->GetUniformLocation("roughnessMap"), 2);
-
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, this->normalMap->TextureId);
-        glUniform1i(program->GetUniformLocation("normalMap"), 3);
-
-        glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D, this->aoMap->TextureId);
-        glUniform1i(program->GetUniformLocation("aoMap"), 4);
-
-
 
         mainCamera->setCameraPos(cameraPos.x,cameraPos.y,cameraPos.z);
         mainCamera->setCameraFront(cameraFront.x,cameraFront.y,cameraFront.z);
         mainCamera->setCameraUp(cameraUp.x,cameraUp.y,cameraUp.z);
 
+        skybox->UseSkyBox(sky_program,mainCamera);
+        /*
+        glDepthMask(GL_FALSE);
 
-        w = w + 0.01f;
-        mainCamera->setCamera(30.0f,ScreenWidth * 1.0f,ScreenHeight * 1.0f,0.1f,1000.0f);
+        sky_program->UseProgram();
+        mainCamera->UseCameraInSky(sky_program);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        sky_vao->DrawVAO();
+
+        glDepthMask(GL_TRUE);
+        */
+
+
+
+
 
         program->UseProgram();
-        glCheckError();
+        pbrMaterial->UseMaterial(program);
 
+        //更新相机位置
         mainCamera->UseCamera(program);
 
+        //更新灯光
         light0->UseLight(program,0);
         light1->UseLight(program,1);
         light2->UseLight(program,2);
         light3->UseLight(program,3);
 
+        //更新模型位置
         glm::mat4 model;
         model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
         model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
         glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
         m->Draw(program);
+
     }
 
     void End()

@@ -46,7 +46,10 @@ SOURCES += main.cpp \
     SOIL/SOIL.c \
     SOIL/stb_image_aug.c \
     Engine/PBRLight.cpp \
-    Engine/PBRMaterial.cpp
+    Engine/PBRMaterial.cpp \
+    GL/ImageFile.cpp \
+    Engine/SkyBox.cpp \
+    GL/GLCubeMapTexture.cpp
 
 HEADERS += \
     GL/File.hpp \

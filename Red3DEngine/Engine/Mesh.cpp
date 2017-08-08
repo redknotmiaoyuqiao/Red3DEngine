@@ -95,6 +95,6 @@ void Mesh::setMaterial(Material * material)
 void Mesh::Draw(GLProgram * program)
 {
     program->UseProgram();
-    this->material->UseMaterial(program);
+    //this->material->UseMaterial(program);
     vao->DrawVAO();
 }

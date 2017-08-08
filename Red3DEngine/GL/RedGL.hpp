@@ -64,3 +64,15 @@ public:
     void DrawVAO();
     void DeleteVAO();
 };
+
+class GLCubeMapTexture
+{
+private:
+public:
+    GLuint TextureId;
+
+    GLCubeMapTexture();
+    ~GLCubeMapTexture();
+
+    void LoadImage(vector<std::string> * faces);
+};
