@@ -7,6 +7,12 @@
 #include "Engine/Engine.hpp"
 #include "SHADER/Shader.hpp"
 
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+
+
 glm::vec3 cameraPos;
 glm::vec3 cameraFront;
 glm::vec3 cameraUp;
@@ -14,25 +20,6 @@ glm::vec3 cameraUp;
 bool keys[1024];
 
 void do_movement();
-
-GLfloat vertices[] = {
-        1.0f, 1.0, 0.0f,   // 右上角
-        1.0f, -1.0f, 0.0f,  // 右下角
-        -1.0f, -1.0f, 0.0f, // 左下角
-        -1.0f, 1.0f, 0.0f   // 左上角
-    };
-
-    GLuint indices[] = { // 注意索引从0开始!
-        3, 1, 0, // 第一个三角形
-        3, 2, 1  // 第二个三角形
-    };
-
-    GLfloat txtcoor[] = {
-        1.0f, 1.0, 0.0f,   // 右上角
-        1.0f, 0.0f, 0.0f,  // 右下角
-        0.0f, 0.0f, 0.0f, // 左下角
-        0.0f, 1.0f, 0.0f   // 左上角
-    };
 
 class RedScript
 {
@@ -61,6 +48,20 @@ public:
     SkyBox * skybox;
 
     void Start(){
+        FT_Library ft;
+        if (FT_Init_FreeType(&ft))
+            std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+
+        FT_Face face;
+        if (FT_New_Face(ft, "/Users/redknot/Red3DEngine/Font/Arial.ttf", 0, &face))
+            std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+
+        FT_Set_Pixel_Sizes(face, 0, 48);
+
+        if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
+            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+
+        /*
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
         metallicMap = new GLTexture();
@@ -78,6 +79,9 @@ public:
         pbrMaterial->setNormalMap(normalMap);
         pbrMaterial->setRoughnessMap(roughnessMap);
         pbrMaterial->setAoMap(aoMap);
+        */
+
+        pbrMaterial = new PBRMaterial();
 
 
 
@@ -103,7 +107,8 @@ public:
         std::string path = "/storage/emulated/0/3D/nano";
         //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
 #else
-        std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
+        //std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
+        std::string path = "/Users/redknot/Red3DEngine/3dModel/qiu";
 #endif
 
         m = new Model(path);
@@ -168,20 +173,8 @@ public:
         mainCamera->setCameraFront(cameraFront.x,cameraFront.y,cameraFront.z);
         mainCamera->setCameraUp(cameraUp.x,cameraUp.y,cameraUp.z);
 
-        skybox->UseSkyBox(sky_program,mainCamera);
-        /*
-        glDepthMask(GL_FALSE);
-
         sky_program->UseProgram();
-        mainCamera->UseCameraInSky(sky_program);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        sky_vao->DrawVAO();
-
-        glDepthMask(GL_TRUE);
-        */
-
-
-
+        skybox->UseSkyBox(sky_program,mainCamera);
 
 
         program->UseProgram();
@@ -198,8 +191,8 @@ public:
 
         //更新模型位置
         glm::mat4 model;
-        model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
+        //model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+        //model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
         glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
         m->Draw(program);
 
@@ -208,6 +201,7 @@ public:
     void End()
     {
         delete program;
+        delete sky_program;
         delete mainCamera;
         delete m;
 

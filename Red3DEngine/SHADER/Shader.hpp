@@ -125,14 +125,17 @@ static const char * PBR_FRAGMENT = SHADER(
                     float roughness = texture(roughnessMap, TexCoords).r;
                     float ao        = texture(aoMap, TexCoords).r;
 
-                    //ao = 1.0;
+                    albedo = vec3(0.5,0.0,0.0);
+                    metallic = 0.5;
+                    roughness = 0.25;
+                    ao = 1.0;
 
-                    vec3 N = getNormalFromMap();
-                    vec3 V = normalize(camPos - WorldPos);
-
-
-                    //vec3 N = normalize(Normal);
+                    //vec3 N = getNormalFromMap();
                     //vec3 V = normalize(camPos - WorldPos);
+
+
+                    vec3 N = normalize(Normal);
+                    vec3 V = normalize(camPos - WorldPos);
 
                     vec3 F0 = vec3(0.04);
                     F0 = mix(F0, albedo, metallic);
