@@ -23,6 +23,9 @@ public:
         glFrontFace(GL_CCW);
         */
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
         //深度测试
         glEnable(GL_DEPTH_TEST);

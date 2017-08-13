@@ -51,7 +51,9 @@ SOURCES += main.cpp \
     Engine/PBRMaterial.cpp \
     GL/ImageFile.cpp \
     Engine/SkyBox.cpp \
-    GL/GLCubeMapTexture.cpp
+    GL/GLCubeMapTexture.cpp \
+    UI/UIText.cpp \
+    UI/UICharacter.cpp
 
 HEADERS += \
     GL/File.hpp \
@@ -68,7 +70,8 @@ HEADERS += \
     SOIL/SOIL.h \
     SOIL/stb_image_aug.h \
     SOIL/stbi_DDS_aug_c.h \
-    SOIL/stbi_DDS_aug.h
+    SOIL/stbi_DDS_aug.h \
+    UI/UI.hpp
 
 DISTFILES += \
     GLSL/f_shader.frag \

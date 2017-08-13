@@ -45,6 +45,7 @@ public:
     ~GLTexture();
     void LoadImage(char * filePath);
     void SetData(unsigned char * data,int width,int height,GLenum internalFormat,GLenum format);
+    void SetCharData(unsigned char * data,int width,int height);
 };
 
 class GLVAO

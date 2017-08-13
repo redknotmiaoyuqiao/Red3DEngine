@@ -12,6 +12,13 @@
 
 #endif
 
+
+/*
+ *
+ * PBR Shader
+ *
+ */
+
 static const char * PBR_VERTEX = SHADER(
                 layout (location = 0) in vec3 aPos;
                 layout (location = 1) in vec3 aNormal;
@@ -195,6 +202,11 @@ static const char * PBR_FRAGMENT = SHADER(
 
 
 
+/*
+ *
+ * 天空盒 Shader
+ *
+ */
 
 static const char * SKY_VERTEX = SHADER(
                 layout (location = 0) in vec3 aPos;
@@ -226,6 +238,46 @@ static const char * SKY_FRAGMENT = SHADER(
             );
 
 
+
+/*
+ *
+ * 文字 Shader
+ *
+ */
+static const char * TEXT_VERTEX = SHADER(
+                layout (location = 0) in vec3 vertex;
+                layout (location = 1) in vec3 coords;
+                out vec3 TexCoords;
+
+                void main(){
+                    gl_Position = vec4(vertex.xy,0.0,1.0);
+                    TexCoords = coords;
+                }
+            );
+static const char * TEXT_FRAGMENT = SHADER(
+                in vec3 TexCoords;
+                out vec4 color;
+
+                uniform sampler2D text_texture;
+                uniform vec3 text_color;
+
+                void main()
+                {
+                    vec2 t = vec2(TexCoords.x,1.0 - TexCoords.y);
+                    float alpha = texture(text_texture, t).r;
+
+                    color = vec4(text_color,alpha);
+                }
+            );
+
+
+
+
+/*
+ *
+ * Phong 光照模型
+ *
+ */
 static const char * PHONG_VERTEX = SHADER(
                 layout (location = 0) in vec3 position;
                 layout (location = 1) in vec3 normal;

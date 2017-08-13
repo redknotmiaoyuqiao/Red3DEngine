@@ -6,6 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "Engine/Engine.hpp"
 #include "SHADER/Shader.hpp"
+#include "UI/UI.hpp"
 
 
 #include <ft2build.h>
@@ -26,6 +27,7 @@ class RedScript
 public:
     GLProgram * program;
     GLProgram * sky_program;
+
     Model * m;
     Camera * mainCamera;
 
@@ -47,20 +49,9 @@ public:
 
     SkyBox * skybox;
 
+    UIText * t;
+
     void Start(){
-        FT_Library ft;
-        if (FT_Init_FreeType(&ft))
-            std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-
-        FT_Face face;
-        if (FT_New_Face(ft, "/Users/redknot/Red3DEngine/Font/Arial.ttf", 0, &face))
-            std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-
-        FT_Set_Pixel_Sizes(face, 0, 48);
-
-        if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-
         /*
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
@@ -161,6 +152,8 @@ public:
         };
         skybox = new SkyBox();
         skybox->loadTexture(&faces);
+
+        t = new UIText("Red3DGameEngine",500,-1.0f,1.0f);
     }
 
     float w = 0.0f;
@@ -168,6 +161,8 @@ public:
     void Update(){
 
         do_movement();
+
+
 
         mainCamera->setCameraPos(cameraPos.x,cameraPos.y,cameraPos.z);
         mainCamera->setCameraFront(cameraFront.x,cameraFront.y,cameraFront.z);
@@ -195,6 +190,8 @@ public:
         //model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
         glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
         m->Draw(program);
+
+        t->Draw();
 
     }
 
