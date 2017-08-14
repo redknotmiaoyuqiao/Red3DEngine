@@ -11,17 +11,19 @@ public:
     RedGame()
     {
         redScript = new RedScript();
-        //redTest = new RedTest();
     }
 
-    void Start()
+    void Start(float width,float height)
     {
+        Screen * screen = Screen::getInstance();
+        screen->setWidthAndHeight(width,height);
+
         //背面剔除
-        /*
+
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         glFrontFace(GL_CCW);
-        */
+
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -43,12 +45,10 @@ public:
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         redScript->Update();
-        //redTest->Update();
     }
 
     void End()
     {
         redScript->End();
-        //redTest->End();
     }
 };

@@ -55,6 +55,9 @@ static const char * PBR_FRAGMENT = SHADER(
                 uniform sampler2D roughnessMap;
                 uniform sampler2D aoMap;
 
+                uniform float out_metallic;
+                uniform float out_roughness;
+
                 // lights
                 uniform vec3 lightPositions[4];
                 uniform vec3 lightColors[4];
@@ -133,8 +136,8 @@ static const char * PBR_FRAGMENT = SHADER(
                     float ao        = texture(aoMap, TexCoords).r;
 
                     albedo = vec3(0.5,0.0,0.0);
-                    metallic = 0.5;
-                    roughness = 0.25;
+                    metallic = out_metallic;
+                    roughness = out_roughness;
                     ao = 1.0;
 
                     //vec3 N = getNormalFromMap();

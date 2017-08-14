@@ -148,9 +148,6 @@ int main( void )
 
 GLFWwindow* window;
 
-//int width = 1280;
-//int height = 720;
-
 int width = 2560;
 int height = 1600;
 
@@ -177,10 +174,7 @@ int main( void )
 
     //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
-    ScreenWidth = 2560;
-    ScreenHeight = 1600;
-
-    window = glfwCreateWindow( width, height, "Red3DEngine", NULL, NULL);
+    window = glfwCreateWindow(width, height, "Red3DEngine", NULL, NULL);
     if( window == NULL ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         getchar();
@@ -196,9 +190,6 @@ int main( void )
     glfwSetCursorPosCallback(window, RedScript::mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-
-    glfwSetCursorPos(window,width/2.0f,height/2.0f);
-
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
@@ -211,15 +202,8 @@ int main( void )
     //glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-
-    //Screen::width = width;
-    //Screen::height = height;
-
-    ScreenWidth = width;
-    ScreenHeight = height;
-
     RedGame * redgame = new RedGame();
-    redgame->Start();
+    redgame->Start((float)width,(float)height);
 
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )
     {

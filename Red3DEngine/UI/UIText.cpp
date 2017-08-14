@@ -42,7 +42,13 @@ UIText::UIText(char * text,int size,float x,float y)
 
 UIText::~UIText()
 {
+    int count = characterList->size();
+    for(int i=0;i<count;i++){
+        delete (*characterList)[i];
+    }
 
+    characterList->clear();
+    delete characterList;
 }
 
 void UIText::setSize(int size)

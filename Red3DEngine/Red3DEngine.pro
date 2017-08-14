@@ -53,7 +53,8 @@ SOURCES += main.cpp \
     Engine/SkyBox.cpp \
     GL/GLCubeMapTexture.cpp \
     UI/UIText.cpp \
-    UI/UICharacter.cpp
+    UI/UICharacter.cpp \
+    Engine/Screen.cpp
 
 HEADERS += \
     GL/File.hpp \

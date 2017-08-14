@@ -19,9 +19,11 @@
 #include "GL/RedGL.hpp"
 #include "DEBUG/Debug.hpp"
 
-static int ScreenWidth = 0;
-static int ScreenHeight = 0;
-
+/*
+ *
+ * 顶点
+ *
+ */
 typedef struct Vertex
 {
     float Position_x;
@@ -39,6 +41,21 @@ typedef struct Vertex
     float TexCoords_x;
     float TexCoords_y;
 }Vertex;
+
+class Screen{
+private:
+    Screen();
+    static Screen * m_pInstance;
+    float ScreenWidth = 0.0f;
+    float ScreenHeight = 0.0f;
+public:
+    static Screen * getInstance();
+
+    void setWidthAndHeight(float width,float height);
+
+    float getWidth();
+    float getHeight();
+};
 
 class Material {
 private:

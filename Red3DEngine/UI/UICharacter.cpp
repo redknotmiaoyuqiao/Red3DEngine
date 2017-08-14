@@ -1,5 +1,5 @@
 #include "UI/UI.hpp"
-
+#include "Engine/Engine.hpp"
 #include <GL/glew.h>
 
 UICharacter::UICharacter(GLProgram * program,char c,int size,float * x,float * y)
@@ -15,7 +15,7 @@ UICharacter::UICharacter(GLProgram * program,char c,int size,float * x,float * y
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
     FT_Face face;
-    if (FT_New_Face(ft, "/Users/redknot/Red3DEngine/Font/Arial.ttf", 0, &face))
+    if (FT_New_Face(ft, "/Users/redknot/Red3DEngine/Font/EnglischeSchTDemBol.ttf", 0, &face))
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
     FT_Set_Pixel_Sizes(face, 0, size);
@@ -23,13 +23,14 @@ UICharacter::UICharacter(GLProgram * program,char c,int size,float * x,float * y
     if (FT_Load_Char(face, c, FT_LOAD_RENDER))
         std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 
-    float w = face->glyph->bitmap.width / ((float)2560);
-    float h = face->glyph->bitmap.rows / ((float)1600);
-    float top = face->glyph->bitmap_top / ((float)1600);
+    Screen * screen = Screen::getInstance();
 
-    float advance = face->glyph->advance.x / ((float)2560 * 64 * 8);
+    float w = face->glyph->bitmap.width / ((float)screen->getWidth());
+    float h = face->glyph->bitmap.rows / ((float)screen->getHeight());
+    float top = face->glyph->bitmap_top / ((float)screen->getHeight());
+    float advance = face->glyph->advance.x / ((float)screen->getWidth() * 64 * 8);
 
-    *x = this->startX + w + advance;
+    *x = this->startX + w + 0.0f;
 
     RedLog("W:%f\n",w);
     RedLog("H:%f\n",h);
@@ -37,7 +38,7 @@ UICharacter::UICharacter(GLProgram * program,char c,int size,float * x,float * y
     RedLog("\n\n\n");
 
     float com_x = startX;
-    float com_y = startY + top - size/((float)1000);
+    float com_y = startY + top - size/((float)2200);
 
     GLfloat textArr[] = {
         com_x,com_y,0.0f,
@@ -54,8 +55,8 @@ UICharacter::UICharacter(GLProgram * program,char c,int size,float * x,float * y
     };
 
     unsigned int textIndex[] = {
-        0,1,3,
-        1,2,3
+        3,1,0,
+        3,2,1
     };
 
     this->vao = new GLVAO();
@@ -69,7 +70,8 @@ UICharacter::UICharacter(GLProgram * program,char c,int size,float * x,float * y
 
 UICharacter::~UICharacter()
 {
-
+    delete this->texture;
+    delete this->vao;
 }
 
 void UICharacter::Draw()

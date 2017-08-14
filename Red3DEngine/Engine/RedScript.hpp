@@ -20,6 +20,12 @@ glm::vec3 cameraUp;
 
 bool keys[1024];
 
+GLfloat yaw   = -90.0f;
+GLfloat pitch =   0.0f;
+GLfloat lastX = 0.0f;
+GLfloat lastY = 0.0f;
+bool firstMouse = true;
+
 void do_movement();
 
 class RedScript
@@ -153,7 +159,12 @@ public:
         skybox = new SkyBox();
         skybox->loadTexture(&faces);
 
-        t = new UIText("Red3DGameEngine",500,-1.0f,1.0f);
+        t = new UIText("Redknot",250,-1.0f,1.0f);
+
+        Screen * screen = Screen::getInstance();
+
+        lastX = screen->getWidth()  / 2.0;
+        lastY = screen->getHeight() / 2.0;
     }
 
     float w = 0.0f;
@@ -161,8 +172,6 @@ public:
     void Update(){
 
         do_movement();
-
-
 
         mainCamera->setCameraPos(cameraPos.x,cameraPos.y,cameraPos.z);
         mainCamera->setCameraFront(cameraFront.x,cameraFront.y,cameraFront.z);
@@ -185,11 +194,28 @@ public:
         light3->UseLight(program,3);
 
         //更新模型位置
+        int nrRows    = 10;
+        int nrColumns = 10;
+        float spacing = 1.5;
+
         glm::mat4 model;
-        //model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-        //model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0));
-        glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-        m->Draw(program);
+        for (unsigned int row = 0; row < nrRows; ++row)
+        {
+            glUniform1f(program->GetUniformLocation("out_metallic"),(float)row / (float)nrRows);
+            for (unsigned int col = 0; col < nrColumns; ++col)
+            {
+                glUniform1f(program->GetUniformLocation("out_roughness"),glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
+                model = glm::mat4();
+                model = glm::translate(model, glm::vec3(
+                    (float)(col - (nrColumns / 2.0f)) * spacing,
+                    (float)(row - (nrRows / 2.0f)) * spacing,
+                    0.0f
+                ));
+                glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+                m->Draw(program);
+            }
+        }
+
 
         t->Draw();
 
@@ -211,12 +237,6 @@ public:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };
-
-GLfloat yaw   = -90.0f;	// Yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right (due to how Eular angles work) so we initially rotate a bit to the left.
-GLfloat pitch =   0.0f;
-GLfloat lastX =  ScreenWidth  / 2.0;
-GLfloat lastY =  ScreenHeight / 2.0;
-bool firstMouse = true;
 
 void RedScript::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
