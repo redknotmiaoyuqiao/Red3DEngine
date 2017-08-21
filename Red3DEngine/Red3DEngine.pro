@@ -63,7 +63,6 @@ HEADERS += \
     DEBUG/Debug.hpp \
     Engine/RedGame.hpp \
     Engine/RedScript.hpp \
-    User/MyNano.hpp \
     RedGameEngine.hpp \
     SHADER/Shader.hpp \
     SOIL/image_DXT.h \
