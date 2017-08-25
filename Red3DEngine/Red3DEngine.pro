@@ -43,10 +43,6 @@ SOURCES += main.cpp \
     Engine/Light.cpp \
     Engine/Camera.cpp \
     Engine/Material.cpp \
-    SOIL/image_DXT.c \
-    SOIL/image_helper.c \
-    SOIL/SOIL.c \
-    SOIL/stb_image_aug.c \
     Engine/PBRLight.cpp \
     Engine/PBRMaterial.cpp \
     GL/ImageFile.cpp \
@@ -54,7 +50,8 @@ SOURCES += main.cpp \
     GL/GLCubeMapTexture.cpp \
     UI/UIText.cpp \
     UI/UICharacter.cpp \
-    Engine/Screen.cpp
+    Engine/Screen.cpp \
+    IMAGE/stb_image.cpp
 
 HEADERS += \
     GL/File.hpp \
@@ -65,14 +62,7 @@ HEADERS += \
     Engine/RedScript.hpp \
     RedGameEngine.hpp \
     SHADER/Shader.hpp \
-    SOIL/image_DXT.h \
-    SOIL/image_helper.h \
-    SOIL/SOIL.h \
-    SOIL/stb_image_aug.h \
-    SOIL/stbi_DDS_aug_c.h \
-    SOIL/stbi_DDS_aug.h \
-    UI/UI.hpp
+    UI/UI.hpp \
+    IMAGE/stb_image.h
 
 DISTFILES += \
-    GLSL/f_shader.frag \
-    GLSL/v_shader.vert

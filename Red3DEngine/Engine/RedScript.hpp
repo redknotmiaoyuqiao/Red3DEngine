@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SOIL/SOIL.h>
-
 #include "GL/File.hpp"
 #include "GLFW/glfw3.h"
 #include "Engine/Engine.hpp"

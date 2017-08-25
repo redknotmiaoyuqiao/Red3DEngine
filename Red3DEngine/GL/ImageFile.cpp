@@ -1,13 +1,27 @@
 #include "File.hpp"
 #include "DEBUG/Debug.hpp"
-#include <SOIL/SOIL.h>
+#include "IMAGE/stb_image.h"
 
 ImageFile::ImageFile()
 {
 
 }
 
+unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * image_height)
+{
+    int nrChannels;
 
+    unsigned char * data = stbi_load(filePath, image_width, image_height, &nrChannels, 0);
+
+    RedLog("-------------LoadImage Start-------------\n");
+    RedLog("Path:%s\n",filePath);
+    RedLog("width:%d\nheight:%d\nchannels:%d\n",*image_width,*image_height,nrChannels);
+    RedLog("-------------LoadImage End---------------\n\n\n\n");
+
+    return data;
+}
+
+/*
 unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * image_height)
 {
     unsigned char * image = SOIL_load_image(filePath, image_width, image_height, 0, SOIL_LOAD_RGB);
@@ -19,6 +33,7 @@ unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * ima
 
     return image;
 }
+*/
 
 /*
 unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * image_height)

@@ -205,6 +205,7 @@ int main( void )
     RedGame * redgame = new RedGame();
     redgame->Start((float)width,(float)height);
 
+
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )
     {
         redgame->Update();
@@ -212,6 +213,7 @@ int main( void )
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
 
     redgame->End();
     delete redgame;

@@ -32,10 +32,10 @@ UICharacter::UICharacter(GLProgram * program,char c,int size,float * x,float * y
 
     *x = this->startX + w + 0.0f;
 
-    RedLog("W:%f\n",w);
-    RedLog("H:%f\n",h);
+    //RedLog("W:%f\n",w);
+    //RedLog("H:%f\n",h);
 
-    RedLog("\n\n\n");
+    //RedLog("\n\n\n");
 
     float com_x = startX;
     float com_y = startY + top - size/((float)2200);
