@@ -56,9 +56,10 @@ public:
     UIText * t;
 
     void Start(){
-        /*
+
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
+        //albedoMap->LoadImage("/Users/redknot/Desktop/wx10.jpg");
         metallicMap = new GLTexture();
         metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_M.png");
         roughnessMap = new GLTexture();
@@ -74,9 +75,9 @@ public:
         pbrMaterial->setNormalMap(normalMap);
         pbrMaterial->setRoughnessMap(roughnessMap);
         pbrMaterial->setAoMap(aoMap);
-        */
 
-        pbrMaterial = new PBRMaterial();
+
+
 
 
 
@@ -102,8 +103,8 @@ public:
         std::string path = "/storage/emulated/0/3D/nano";
         //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
 #else
-        //std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
-        std::string path = "/Users/redknot/Red3DEngine/3dModel/qiu";
+        std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
+        //std::string path = "/Users/redknot/Red3DEngine/3dModel/qiu";
 #endif
 
         m = new Model(path);
@@ -196,6 +197,9 @@ public:
         int nrColumns = 10;
         float spacing = 1.5;
 
+        //pbrMaterial->UseMaterial(program);
+
+        /*
         glm::mat4 model;
         for (unsigned int row = 0; row < nrRows; ++row)
         {
@@ -213,8 +217,13 @@ public:
                 m->Draw(program);
             }
         }
+        */
 
-        //m->Draw(program);
+        glm::mat4 model;
+        model = glm::scale(model,glm::vec3(0.1f));
+        glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+
+        m->Draw(program);
 
 
         t->Draw();

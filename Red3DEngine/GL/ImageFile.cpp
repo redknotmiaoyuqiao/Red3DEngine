@@ -15,6 +15,7 @@ unsigned char * ImageFile::ReadImage(char * filePath,int * image_width,int * ima
 
     RedLog("-------------LoadImage Start-------------\n");
     RedLog("Path:%s\n",filePath);
+    RedLog("Sizeof:%d\n",sizeof(data));
     RedLog("width:%d\nheight:%d\nchannels:%d\n",*image_width,*image_height,nrChannels);
     RedLog("-------------LoadImage End---------------\n\n\n\n");
 

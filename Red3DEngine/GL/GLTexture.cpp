@@ -24,6 +24,8 @@ void GLTexture::LoadImage(char * filePath)
 {
     glBindTexture(GL_TEXTURE_2D, TextureId);
 
+    glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+
     int width, height;
 
     ImageFile * imageFile = new ImageFile();
