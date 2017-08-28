@@ -57,6 +57,7 @@ public:
 
     void Start(){
 
+        /*
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
         //albedoMap->LoadImage("/Users/redknot/Desktop/wx10.jpg");
@@ -68,6 +69,32 @@ public:
         normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_R.png");
         aoMap = new GLTexture();
         aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_AO.png");
+        */
+
+
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_BaseColor.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Metallic.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Roughness.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Normal.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Height.png");
+
+        /*
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_BaseColor.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Metallic.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Roughness.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Normal.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Height.png");
+        */
 
         pbrMaterial = new PBRMaterial();
         pbrMaterial->setAlbedoMap(albedoMap);
@@ -103,7 +130,8 @@ public:
         std::string path = "/storage/emulated/0/3D/nano";
         //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
 #else
-        std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
+        std::string path = "/Users/redknot/Red3DEngine/3dModel/Tea/model";
+        //std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
         //std::string path = "/Users/redknot/Red3DEngine/3dModel/qiu";
 #endif
 
@@ -220,7 +248,12 @@ public:
         */
 
         glm::mat4 model;
-        model = glm::scale(model,glm::vec3(0.1f));
+        model = glm::scale(model,glm::vec3(1.0f));
+        model = glm::rotate(model,glm::radians(-90.0f),glm::vec3(1.0f,0.0f,0.0f));
+        model = glm::rotate(model,glm::radians(-w),glm::vec3(0.0f,0.0f,1.0f));
+        w = w + 0.1f;
+
+
         glUniformMatrix4fv(program->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
 
         m->Draw(program);

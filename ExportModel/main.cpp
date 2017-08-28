@@ -16,15 +16,9 @@ float y[] = {-0.57, -0.61, -0.61, -0.70, -0.70, -0.57, -0.57, -0.63, -0.63, -0.6
 float z[] = { 0.01,  0.03,  0.03,  0.00,  0.00,  0.00,  0.00,  0.13,  0.13,  0.00,  0.00,  0.04,  0.04,  0.01,  0.01, -0.20, -0.20, -0.14, -0.14, -0.16, -0.16, -0.10, -0.10,  0.24,  0.24,  0.05,  0.05,  0.07,  0.07, -0.08, -0.08, -0.05, -0.05, -0.11, -0.11, -0.20, -0.20, -0.11, -0.11, -0.24, -0.24, -0.32, -0.32, -0.07, -0.07, -0.25, -0.25, -0.20, -0.20, -0.35, -0.35, -0.28, -0.28, -0.08, -0.08, -0.27, -0.27, -0.26, -0.26,  1.27,  1.27,  1.25,  1.25,  1.23,  1.23,  1.21,  1.21,  1.19,  1.19,  1.17,  1.17,  1.15,  1.15,  1.10,  1.10,  1.04,  1.04,  0.95,  0.95,  0.83,  0.83,  0.68,  0.68,  0.53,  0.53,  0.37,  0.37,  0.20,  0.20,  0.08,  0.08, -0.04, -0.31, -0.29, -0.30, -0.36, -0.35, -0.59, -0.55, -0.40, -0.26,  1.27};
 int main(int argc, char *argv[])
 {
-    int number = sizeof(x)/sizeof(float);
-    printf("\n\nvertex number:%d\n\n",number);
-    for(int i=0;i<number;i++)
-    {
 
-    }
-    /*
-    string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP.FBX";
-    string out = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
+    string path = "/Users/redknot/Red3DEngine/3dModel/Tea/tea.FBX";
+    string out = "/Users/redknot/Red3DEngine/3dModel/Tea/model/";
 
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -39,7 +33,6 @@ int main(int argc, char *argv[])
         aiMesh * paiMesh = scene->mMeshes[i];
         loadMesh(paiMesh,i,out);
     }
-    */
 
     return 0;
 }
