@@ -42,6 +42,8 @@ static const char * PBR_VERTEX = SHADER(
                 }
             );
 
+
+                //缺少IBL
 static const char * PBR_FRAGMENT = SHADER(
                 out vec4 FragColor;
                 in vec2 TexCoords;
