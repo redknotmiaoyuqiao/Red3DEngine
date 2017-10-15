@@ -19,6 +19,7 @@ unix:!macx
 
 unix:macx
 {
+    QMAKE_MAC_SDK = macosx10.13
     LIBS+= -framework opengl
     LIBS+= -framework Cocoa -framework IOKit -framework CoreVideo
 

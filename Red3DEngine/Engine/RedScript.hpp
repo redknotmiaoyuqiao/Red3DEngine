@@ -227,7 +227,7 @@ public:
 
         //pbrMaterial->UseMaterial(program);
 
-        /*
+
         glm::mat4 model;
         for (unsigned int row = 0; row < nrRows; ++row)
         {
@@ -245,8 +245,8 @@ public:
                 m->Draw(program);
             }
         }
-        */
 
+/*
         glm::mat4 model;
         model = glm::scale(model,glm::vec3(1.0f));
         model = glm::rotate(model,glm::radians(-90.0f),glm::vec3(1.0f,0.0f,0.0f));
@@ -260,6 +260,7 @@ public:
 
 
         t->Draw();
+        */
 
     }
 
