@@ -52,7 +52,9 @@ SOURCES += main.cpp \
     UI/UIText.cpp \
     UI/UICharacter.cpp \
     Engine/Screen.cpp \
-    IMAGE/stb_image.cpp
+    IMAGE/stb_image.cpp \
+    #pbr.cpp
+    Engine/Input.cpp
 
 HEADERS += \
     GL/File.hpp \
@@ -64,6 +66,10 @@ HEADERS += \
     RedGameEngine.hpp \
     SHADER/Shader.hpp \
     UI/UI.hpp \
-    IMAGE/stb_image.h
+    IMAGE/stb_image.h \
+    SHADER/Cubemap.hpp \
+    SHADER/Header.hpp \
+    SHADER/Sky.hpp \
+    Engine/Struct.hpp
 
 DISTFILES += \

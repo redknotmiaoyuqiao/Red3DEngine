@@ -19,43 +19,7 @@
 #include "GL/RedGL.hpp"
 #include "DEBUG/Debug.hpp"
 
-/*
- *
- * 顶点
- *
- */
-typedef struct Vertex
-{
-    float Position_x;
-    float Position_y;
-    float Position_z;
-
-    float Normal_x;
-    float Normal_y;
-    float Normal_z;
-
-    float Tangents_x;
-    float Tangents_y;
-    float Tangents_z;
-
-    float TexCoords_x;
-    float TexCoords_y;
-}Vertex;
-
-class Screen{
-private:
-    Screen();
-    static Screen * m_pInstance;
-    float ScreenWidth = 0.0f;
-    float ScreenHeight = 0.0f;
-public:
-    static Screen * getInstance();
-
-    void setWidthAndHeight(float width,float height);
-
-    float getWidth();
-    float getHeight();
-};
+#include "Struct.hpp"
 
 class Material {
 private:
@@ -193,7 +157,7 @@ public:
 
 class Camera
 {
-private:
+public:
     float * cameraPos;
     float * cameraFront;
     float * cameraUp;
@@ -209,6 +173,8 @@ public:
     ~Camera();
 
     void setCamera(float fovy,float width,float height,float near,float far);
+
+    void setCameraWidthHeight(float width,float height);
 
     void setCameraPos(float x,float y,float z);
     void setCameraFront(float x,float y,float z);
@@ -230,4 +196,40 @@ public:
     void loadTexture(vector<std::string> * faces);
 
     void UseSkyBox(GLProgram * gragram,Camera * camera);
+};
+
+class Screen{
+private:
+    Screen();
+    static Screen * m_pInstance;
+    int ScreenWidth = 0;
+    int ScreenHeight = 0;
+public:
+    static Screen * getInstance();
+
+    void setWidthAndHeight(int width,int height);
+
+    int getWidth();
+    int getHeight();
+};
+
+class Input
+{
+private:
+    Input();
+
+    static Input * m_pInstance;
+
+    Vector2 mousePoint;
+
+public:
+    bool keys[1024];
+
+public:
+    static Input * getInstance();
+
+    void setMousePoint(float x,float y);
+    Vector2 getMousePoint();
+
+
 };

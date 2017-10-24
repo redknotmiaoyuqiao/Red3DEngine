@@ -121,7 +121,7 @@ int main( void )
 */
 
 
-
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -138,22 +138,22 @@ int main( void )
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "GL/RedGL.hpp"
+
 #include "GL/File.hpp"
 
 #include "Engine/Engine.hpp"
 #include "Engine/RedGame.hpp"
 
-#include "Engine/RedScript.hpp"
 
 GLFWwindow* window;
 
 int width = 2560;
 int height = 1600;
 
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow * window, double xpos, double ypos);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 int main( void )
 {
@@ -170,8 +170,12 @@ int main( void )
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
+
+    //Mac上不能加这句
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
+    //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
     //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     window = glfwCreateWindow(width, height, "Red3DEngine", NULL, NULL);
@@ -186,9 +190,10 @@ int main( void )
     glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     // Set the required callback functions
-    glfwSetKeyCallback(window, RedScript::key_callback);
-    glfwSetCursorPosCallback(window, RedScript::mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    //glfwSetScrollCallback(window, scroll_callback);
 
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
@@ -199,11 +204,18 @@ int main( void )
     }
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    //glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    //隐藏鼠标
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    int scrWidth, scrHeight;
+    glfwGetFramebufferSize(window, &scrWidth, &scrHeight);
+
+    Screen * screen = Screen::getInstance();
+    screen->setWidthAndHeight(scrWidth,scrHeight);
 
     RedGame * redgame = new RedGame();
-    redgame->Start((float)width,(float)height);
+    redgame->Start();
 
 
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 )
@@ -224,9 +236,32 @@ int main( void )
 }
 
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    //camera.ProcessMouseScroll(yoffset);
+    Screen * screen = Screen::getInstance();
+    screen->setWidthAndHeight(width,height);
 }
 
+void mouse_callback(GLFWwindow * window, double xpos, double ypos)
+{
+    Input * input = Input::getInstance();
+    input->setMousePoint((float)xpos, (float)ypos);
+}
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+    Input * input = Input::getInstance();
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+
+    if (key >= 0 && key < 1024)
+    {
+        if (action == GLFW_PRESS){
+            input->keys[key] = true;
+        }
+        else if (action == GLFW_RELEASE){
+            input->keys[key] = false;
+        }
+    }
+}

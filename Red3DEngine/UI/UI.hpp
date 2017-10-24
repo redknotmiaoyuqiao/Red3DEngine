@@ -41,6 +41,7 @@ public:
 
     ~UIText();
 
+    void setText(char * text);
     void setSize(int size);
     void setPosition(float x,float y);
     void Draw();

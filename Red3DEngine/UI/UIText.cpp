@@ -40,6 +40,30 @@ UIText::UIText(char * text,int size,float x,float y)
     }
 }
 
+void UIText::setText(char * text)
+{
+    int count = characterList->size();
+    for(int i=0;i<count;i++){
+        delete (*characterList)[i];
+    }
+
+    characterList->clear();
+
+
+    int i=0;
+    while(true){
+        char c = text[i];
+        if(c == '\0'){
+            break;
+        }
+
+        UICharacter * uiCharacter = new UICharacter(text_program,c,size,&this->startX,&this->startY);
+        characterList->push_back(uiCharacter);
+
+        i++;
+    }
+}
+
 UIText::~UIText()
 {
     int count = characterList->size();

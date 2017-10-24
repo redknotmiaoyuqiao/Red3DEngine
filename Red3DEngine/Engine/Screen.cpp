@@ -3,8 +3,8 @@
 Screen * Screen::m_pInstance = NULL;
 
 Screen::Screen(){
-    this->ScreenWidth = 0.0f;
-    this->ScreenHeight = 0.0f;
+    this->ScreenWidth = 0;
+    this->ScreenHeight = 0;
 }
 
 Screen * Screen::getInstance()
@@ -15,18 +15,18 @@ Screen * Screen::getInstance()
     return m_pInstance;
 }
 
-void Screen::setWidthAndHeight(float width,float height)
+void Screen::setWidthAndHeight(int width,int height)
 {
     this->ScreenWidth = width;
     this->ScreenHeight = height;
 }
 
-float Screen::getWidth()
+int Screen::getWidth()
 {
     return this->ScreenWidth;
 }
 
-float Screen::getHeight()
+int Screen::getHeight()
 {
     return this->ScreenHeight;
 }

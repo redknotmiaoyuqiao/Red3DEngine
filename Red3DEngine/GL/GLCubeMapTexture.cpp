@@ -21,7 +21,7 @@ void GLCubeMapTexture::LoadImage(vector<std::string> * faces)
         ImageFile * imageFile = new ImageFile();
         unsigned char * data = imageFile->ReadImage((char *)(*faces)[i].c_str(), &width, &height);
 
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
         delete imageFile;
         free(data);

@@ -6,6 +6,7 @@
 #include "SHADER/Shader.hpp"
 #include "UI/UI.hpp"
 
+#include "IMAGE/stb_image.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -16,15 +17,13 @@ glm::vec3 cameraPos;
 glm::vec3 cameraFront;
 glm::vec3 cameraUp;
 
-bool keys[1024];
-
 GLfloat yaw   = -90.0f;
-GLfloat pitch =   0.0f;
+GLfloat pitch = 0.0f;
 GLfloat lastX = 0.0f;
 GLfloat lastY = 0.0f;
 bool firstMouse = true;
 
-void do_movement();
+//void do_movement();
 
 class RedScript
 {
@@ -55,6 +54,9 @@ public:
 
     UIText * t;
 
+
+    GLProgram * backgroundShader;
+
     void Start(){
 
         /*
@@ -72,6 +74,7 @@ public:
         */
 
 
+
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_BaseColor.png");
         metallicMap = new GLTexture();
@@ -83,18 +86,21 @@ public:
         aoMap = new GLTexture();
         aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Height.png");
 
+
+
         /*
         albedoMap = new GLTexture();
-        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_BaseColor.png");
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/rustediron/rustediron2_basecolor.png");
         metallicMap = new GLTexture();
-        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Metallic.png");
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/rustediron/rustediron2_metallic.png");
         roughnessMap = new GLTexture();
-        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Roughness.png");
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/rustediron/rustediron2_roughness.png");
         normalMap = new GLTexture();
-        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Normal.png");
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/rustediron/rustediron2_normal.png");
         aoMap = new GLTexture();
-        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T/tea_DefaultMaterial_Height.png");
+        //aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/rustediron/rustediron2_metallic.png");
         */
+
 
         pbrMaterial = new PBRMaterial();
         pbrMaterial->setAlbedoMap(albedoMap);
@@ -105,7 +111,13 @@ public:
 
 
 
+        GLShader * backgroundShader_V = new GLShader(GL_VERTEX_SHADER,Background_VERTEX);
+        GLShader * backgroundShader_F = new GLShader(GL_FRAGMENT_SHADER,Background_FRAGMENT);
 
+        backgroundShader = new GLProgram();
+        backgroundShader->AddShader(backgroundShader_V);
+        backgroundShader->AddShader(backgroundShader_F);
+        backgroundShader->LinkProgram();
 
 
         GLShader * sky_v_shader = new GLShader(GL_VERTEX_SHADER,SKY_VERTEX);
@@ -186,26 +198,41 @@ public:
         skybox = new SkyBox();
         skybox->loadTexture(&faces);
 
-        t = new UIText("Redknot",250,-1.0f,1.0f);
+        t = new UIText("Redknot Miaoyuqiao",250,-1.0f,1.0f);
+        t->setText("miaowumiaowu");
 
         Screen * screen = Screen::getInstance();
 
         lastX = screen->getWidth()  / 2.0;
         lastY = screen->getHeight() / 2.0;
+        //glViewport(0, 0, screen->getWidth(), screen->getHeight());
+
     }
 
     float w = 0.0f;
 
     void Update(){
 
+        t->Draw();
+
+
+
         do_movement();
 
+
+        Input * input = Input::getInstance();
+        mouse_callback(input->getMousePoint().x,input->getMousePoint().y);
+
+
+        //do_movement();
+        Screen * screen = Screen::getInstance();
+        mainCamera->setCameraWidthHeight(screen->getWidth(),screen->getHeight());
         mainCamera->setCameraPos(cameraPos.x,cameraPos.y,cameraPos.z);
         mainCamera->setCameraFront(cameraFront.x,cameraFront.y,cameraFront.z);
         mainCamera->setCameraUp(cameraUp.x,cameraUp.y,cameraUp.z);
 
         sky_program->UseProgram();
-        skybox->UseSkyBox(sky_program,mainCamera);
+        skybox->UseSkyBox(sky_program, mainCamera);
 
 
         program->UseProgram();
@@ -225,9 +252,9 @@ public:
         int nrColumns = 10;
         float spacing = 1.5;
 
-        //pbrMaterial->UseMaterial(program);
+        pbrMaterial->UseMaterial(program);
 
-
+/*
         glm::mat4 model;
         for (unsigned int row = 0; row < nrRows; ++row)
         {
@@ -246,9 +273,10 @@ public:
             }
         }
 
-/*
+*/
+
         glm::mat4 model;
-        model = glm::scale(model,glm::vec3(1.0f));
+        model = glm::scale(model,glm::vec3(0.5f));
         model = glm::rotate(model,glm::radians(-90.0f),glm::vec3(1.0f,0.0f,0.0f));
         model = glm::rotate(model,glm::radians(-w),glm::vec3(0.0f,0.0f,1.0f));
         w = w + 0.1f;
@@ -259,9 +287,8 @@ public:
         m->Draw(program);
 
 
-        t->Draw();
-        */
-
+        //t->setText("miaowumiaowu");
+        //t->Draw();
     }
 
     void End()
@@ -277,70 +304,58 @@ public:
         delete light3;
     }
 
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-};
-
-void RedScript::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    //RedLog("xpos:%f\n",xpos);
-    //RedLog("ypos:%f\n",ypos);
-    if(firstMouse)
+    void mouse_callback(double xpos, double ypos)
     {
+        if(firstMouse)
+        {
+            lastX = xpos;
+            lastY = ypos;
+            firstMouse = false;
+        }
+
+        GLfloat xoffset = xpos - lastX;
+        GLfloat yoffset = lastY - ypos;
         lastX = xpos;
         lastY = ypos;
-        firstMouse = false;
+
+        GLfloat sensitivity = 0.2f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        yaw   += xoffset;
+        pitch += yoffset;
+
+        if(pitch > 89.0f)
+            pitch = 89.0f;
+        if(pitch < -89.0f)
+            pitch = -89.0f;
+
+        glm::vec3 front;
+        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        front.y = sin(glm::radians(pitch));
+        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        cameraFront = glm::normalize(front);
     }
 
-    GLfloat xoffset = xpos - lastX;
-    GLfloat yoffset = lastY - ypos;
-    lastX = xpos;
-    lastY = ypos;
-
-    GLfloat sensitivity = 0.3f;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw   += xoffset;
-    pitch += yoffset;
-
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if(pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
-}
-
-void RedScript::key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    if (key >= 0 && key < 1024)
+    void do_movement()
     {
-        if (action == GLFW_PRESS)
-            keys[key] = true;
-        else if (action == GLFW_RELEASE)
-            keys[key] = false;
-    }
-}
+        Input * input = Input::getInstance();
 
-void do_movement()
-{
-    // Camera controls
-    GLfloat cameraSpeed = 0.07f;
-    if (keys[GLFW_KEY_W])
-        cameraPos += cameraSpeed * cameraFront;
-    if (keys[GLFW_KEY_S])
-        cameraPos -= cameraSpeed * cameraFront;
-    if (keys[GLFW_KEY_A])
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (keys[GLFW_KEY_D])
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-}
+        GLfloat cameraSpeed = 0.07f;
+        if (input->keys[GLFW_KEY_W])
+            cameraPos += cameraSpeed * cameraFront;
+        if (input->keys[GLFW_KEY_S])
+            cameraPos -= cameraSpeed * cameraFront;
+        if (input->keys[GLFW_KEY_A])
+            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        if (input->keys[GLFW_KEY_D])
+            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    }
+};
+
+
+
+
+
 
 

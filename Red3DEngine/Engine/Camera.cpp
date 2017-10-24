@@ -29,6 +29,12 @@ void Camera::setCamera(float fovy,float width,float height,float near,float far)
     this->far = far;
 }
 
+void Camera::setCameraWidthHeight(float width,float height)
+{
+    this->width = width;
+    this->height = height;
+}
+
 void Camera::setCameraPos(float x,float y,float z)
 {
     cameraPos[0] = x;
