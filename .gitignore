@@ -3,3 +3,4 @@ export_bin/
 *.DS_Store
 libs/
 obj/
+redEyeBin/
