@@ -28,6 +28,8 @@ public:
     void UseProgram();
 
     GLuint GetUniformLocation(char * name);
+
+    void putMatrix4fv(char * name,const GLfloat* value);
 };
 
 

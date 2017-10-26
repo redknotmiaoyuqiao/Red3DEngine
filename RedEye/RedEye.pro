@@ -38,11 +38,14 @@ SOURCES += main.cpp \
     RedGL/GLProgram.cpp \
     RedGL/GLShader.cpp \
     Engine/Engine.cpp \
-    RedGL/GLVAO.cpp
+    RedGL/GLVAO.cpp \
+    Component/Camera.cpp \
+    Engine/Screen.cpp
 
 HEADERS += \
     DEBUG/Debug.hpp \
     RedGL/RedGL.hpp \
     SHADER/Shader.hpp \
     SHADER/Header.hpp \
-    Engine/Engine.hpp
+    Engine/Engine.hpp \
+    Component/Component.hpp

@@ -70,3 +70,10 @@ GLuint GLProgram::GetUniformLocation(char * name)
 {
     return glGetUniformLocation(ProgramId,name);
 }
+
+
+void GLProgram::putMatrix4fv(char * name,const GLfloat* value)
+{
+    this->UseProgram();
+    glUniformMatrix4fv(this->GetUniformLocation(name), 1, GL_FALSE, value);
+}

@@ -4,6 +4,11 @@
 
 #include "Engine/Engine.hpp"
 
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow * window, double xpos, double ypos);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+
 int main()
 {
     RedLog("Welcame RedEye!!!!\n\n");
@@ -43,6 +48,18 @@ int main()
 
     glfwMakeContextCurrent(window);
 
+    //设置监听
+    RedLog("GLFW Init Callback");
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+
+    int scrWidth, scrHeight;
+    glfwGetFramebufferSize(window, &scrWidth, &scrHeight);
+
+    Screen * screen = Screen::getInstance();
+    screen->setWidthAndHeight(scrWidth,scrHeight);
+
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         RedLog("Failed to initialize GLEW\n");
@@ -67,3 +84,21 @@ int main()
 
     return 0;
 }
+
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    Screen * screen = Screen::getInstance();
+    screen->setWidthAndHeight(width,height);
+
+    RedLog("Screen Size Changed!!!");
+}
+
+void mouse_callback(GLFWwindow * window, double xpos, double ypos)
+{
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+}
+

@@ -31,6 +31,7 @@
 
 using namespace std;
 
+
 static void RedPrintf(const char *file, const char *function,int line,char * format,...)
 {
     BaseRedLog("\033[;31m%s (%d) \033[0m",file,line);
@@ -70,6 +71,8 @@ static void RedPrintf(const char *file, const char *function,int line,char * for
     }
     va_end(ap);  //结束时清理工作
     BaseRedLog("\n");
+
+
 }
 
 static string intToString(int v)

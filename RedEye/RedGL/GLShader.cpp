@@ -9,7 +9,7 @@ GLShader::GLShader(GLenum type, const GLchar * src)
     int InfoLogLength;
 
     // Compile Shader
-    RedLog("Compiling shader : %s\n", src);
+    RedLog("\nCompiling shader : \n%s\n", src);
     glShaderSource(ShaderId, 1, &src , NULL);
     glCompileShader(ShaderId);
 
