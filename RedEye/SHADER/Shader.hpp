@@ -40,7 +40,7 @@ static const char * s_VERTEX = SHADER(
 
             void main()
             {
-                gl_Position = vec4(position, 1.0f);
+                gl_Position = vec4(position * 1.0, 1.0f);
                 TexCoords = texCoords.xy;
             }
             );
@@ -53,11 +53,18 @@ static const char * s_FRAGMENT = SHADER(
 
             void main()
             {
-                vec4 c = texture(screenTexture, TexCoords);
+                //vec4 c = texture(screenTexture, TexCoords);
 
-                float t = c.x;
-                c.x = c.y;
-                c.y = t;
+
+                vec2 m_outUV = TexCoords;
+
+                float fstep=0.01;
+                vec4 sample0=texture(screenTexture,vec2(m_outUV.x-fstep,m_outUV.y-fstep));
+                vec4 sample1=texture(screenTexture,vec2(m_outUV.x+fstep,m_outUV.y-fstep));
+                vec4 sample2=texture(screenTexture,vec2(m_outUV.x+fstep,m_outUV.y+fstep));
+                vec4 sample3=texture(screenTexture,vec2(m_outUV.x-fstep,m_outUV.y+fstep));
+                vec4 c = (sample0+sample1+sample2+sample3) / 4.0;
+
 
                 color = c;
             }

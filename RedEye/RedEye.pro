@@ -40,7 +40,10 @@ SOURCES += main.cpp \
     Engine/Engine.cpp \
     RedGL/GLVAO.cpp \
     Component/Camera.cpp \
-    Engine/Screen.cpp
+    Engine/Screen.cpp \
+    File/IMAGE/stb_image.cpp \
+    File/ImageFile.cpp \
+    RedGL/GLRenderTarget.cpp
 
 HEADERS += \
     DEBUG/Debug.hpp \
@@ -48,4 +51,6 @@ HEADERS += \
     SHADER/Shader.hpp \
     SHADER/Header.hpp \
     Engine/Engine.hpp \
-    Component/Component.hpp
+    Component/Component.hpp \
+    File/File.hpp \
+    File/IMAGE/stb_image.h

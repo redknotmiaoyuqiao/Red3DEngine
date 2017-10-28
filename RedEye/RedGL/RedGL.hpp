@@ -52,3 +52,25 @@ public:
     void DrawVAO();
     void DeleteVAO();
 };
+
+
+#define RED_TARGET_TEXTURE 0
+#define RED_TARGET_SCREEN 1
+
+class GLRenderTarget{
+private:
+    GLuint framebuffer;
+    GLuint texColorBuffer;
+    GLuint rbo;
+
+    int target;
+public:
+    GLRenderTarget(int width,int height,int target);
+    ~GLRenderTarget();
+
+    void setWidthAndHeight(int width,int height);
+
+    void useFrameBuffer();
+
+    GLuint getTextureId();
+};

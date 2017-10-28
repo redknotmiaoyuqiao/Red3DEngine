@@ -3,6 +3,7 @@
 #include "DEBUG/Debug.hpp"
 #include "SHADER/Shader.hpp"
 #include "Component/Component.hpp"
+#include "File/File.hpp"
 #include <GL/glew.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -42,9 +43,13 @@ GLProgram * g;
 GLProgram * s;
 Camera * mainCamera;
 
+GLRenderTarget * target;
+GLRenderTarget * target_screen;
+
 
 GLuint framebuffer;
 GLuint texColorBuffer;
+GLuint rbo;
 
 void Engine::Start()
 {
@@ -71,34 +76,8 @@ void Engine::Start()
     Screen * screen = Screen::getInstance();
     mainCamera = new Camera(30.0f,screen->getWidth(),screen->getHeight(),0.1f,1000.0f);
 
-
-    glViewport(0,0,screen->getWidth(),screen->getHeight());
-    //FBO
-    glGenFramebuffers(1, &framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-    // Generate texture
-    glGenTextures(1, &texColorBuffer);
-    glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen->getWidth(), screen->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    // Attach it to currently bound framebuffer object
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
-
-    GLuint rbo;
-    glGenRenderbuffers(1, &rbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screen->getWidth(), screen->getHeight());
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    target = new GLRenderTarget(screen->getWidth(),screen->getHeight(),RED_TARGET_SCREEN);
+    target_screen = new GLRenderTarget(screen->getWidth(),screen->getHeight(),RED_TARGET_SCREEN);
 }
 
 
@@ -109,14 +88,13 @@ void Engine::Update()
     Screen * screen = Screen::getInstance();
     glViewport(0,0,screen->getWidth(),screen->getHeight());
 
+    target->setWidthAndHeight(screen->getWidth(),screen->getHeight());
+    target->useFrameBuffer();
+
     mainCamera->setCameraWidthHeight(screen->getWidth(),screen->getHeight());
 
-
-
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
-    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 model;
     model = glm::scale(model,glm::vec3(1.0f));
@@ -134,26 +112,15 @@ void Engine::Update()
 
 
 
-
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    /*
+    target_screen->useFrameBuffer();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDisable(GL_DEPTH_TEST);
     s->UseProgram();
-    glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+    glBindTexture(GL_TEXTURE_2D, target->getTextureId());
     vao_s->DrawVAO();
-
-
-    /*
-    screenShader.Use();
-    glBindVertexArray(quadVAO);
-    glDisable(GL_DEPTH_TEST);
-    glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    glBindVertexArray(0);
     */
 }
 
