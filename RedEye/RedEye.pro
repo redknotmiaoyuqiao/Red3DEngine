@@ -43,7 +43,12 @@ SOURCES += main.cpp \
     Engine/Screen.cpp \
     File/IMAGE/stb_image.cpp \
     File/ImageFile.cpp \
-    RedGL/GLRenderTarget.cpp
+    RedGL/GLRenderTarget.cpp \
+    Engine/Input.cpp \
+    Component/GameObject.cpp \
+    Component/Light.cpp \
+    Engine/Model.cpp \
+    Engine/Mesh.cpp
 
 HEADERS += \
     DEBUG/Debug.hpp \
@@ -53,4 +58,5 @@ HEADERS += \
     Engine/Engine.hpp \
     Component/Component.hpp \
     File/File.hpp \
-    File/IMAGE/stb_image.h
+    File/IMAGE/stb_image.h \
+    Script/Test.hpp

@@ -96,9 +96,25 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow * window, double xpos, double ypos)
 {
+    Input * input = Input::getInstance();
+    input->setMousePoint(xpos,ypos);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+    Input * input = Input::getInstance();
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+
+    if (key >= 0 && key < 1024)
+    {
+        if (action == GLFW_PRESS){
+            input->keys[key] = true;
+        }
+        else if (action == GLFW_RELEASE){
+            input->keys[key] = false;
+        }
+    }
 }
 

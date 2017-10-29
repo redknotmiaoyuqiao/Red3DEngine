@@ -1,8 +1,61 @@
+#pragma once
+
 #include <glm/glm.hpp>
 
-class Camera
-{
+
+class Transform;
+
+class GameObject{
 private:
+    Transform * transform;
+public:
+    GameObject();
+    ~GameObject();
+    Transform * getTransform();
+};
+
+
+class Transform{
+private:
+    glm::mat4 model;
+};
+
+
+class Spirit : public GameObject{
+private:
+public:
+    Spirit();
+    ~Spirit();
+};
+
+/*
+ *
+ * 灯光
+ *
+ */
+class Light : public GameObject{
+private:
+    glm::vec3 position;
+    glm::vec3 color;
+public:
+    Light();
+    ~Light();
+
+    glm::vec3 getPosition();
+    glm::vec3 getColor();
+
+    void setPosition(float x,float y,float z);
+    void setColor(float r,float g,float b);
+};
+
+/*
+ *
+ * Camera
+ *
+ */
+class Camera : public GameObject
+{
+public:
     float * cameraPos;
     float * cameraFront;
     float * cameraUp;
