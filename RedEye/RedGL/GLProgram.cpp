@@ -77,3 +77,16 @@ void GLProgram::putMatrix4fv(char * name,const GLfloat* value)
     this->UseProgram();
     glUniformMatrix4fv(this->GetUniformLocation(name), 1, GL_FALSE, value);
 }
+
+void GLProgram::put3f(char * name,GLfloat x,GLfloat y,GLfloat z)
+{
+    this->UseProgram();
+    glUniform3f(this->GetUniformLocation(name),x,y,z);
+}
+
+void GLProgram::put1i(char * name,GLint v){
+    this->UseProgram();
+    glUniform1i(this->GetUniformLocation(name),v);
+}
+
+

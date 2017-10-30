@@ -4,24 +4,33 @@
 #include "SHADER/Shader.hpp"
 #include "File/File.hpp"
 #include "Script/Test.hpp"
+#include "Script/PBR.hpp"
 
 RedEyeBehaviour * test;
+RedEyeBehaviour * pbr;
 
 void Engine::Start()
 {
     RedLog("Engine Start !!!!");
 
     test = new Test();
-    test->Start();
+    pbr = new PBR();
+    //test->Start();
+    pbr->Start();
 }
 
 void Engine::Update()
 {
-    test->Update();
+    //test->Update();
+    pbr->Update();
 }
 
 void Engine::End()
 {
-    test->End();
+    //test->End();
     delete test;
+
+    pbr->End();
+
+    delete pbr;
 }

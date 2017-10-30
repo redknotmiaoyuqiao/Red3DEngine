@@ -1,4 +1,7 @@
 #include "Component/Component.hpp"
+#include <gl/glew.h>
+#include <string>
+#include <iostream>
 
 Light::Light()
 {
@@ -33,3 +36,16 @@ glm::vec3 Light::getColor()
 {
     return this->color;
 }
+
+
+void Light::UseLight(GLProgram * program,int i)
+{
+    const char * position_str = ("lightPositions[" + std::to_string(i) + "]").c_str();
+    const char * color_str = ("lightColors[" + std::to_string(i) + "]").c_str();
+
+    //RedLog("%s\n",color_str);
+
+    glUniform3f(program->GetUniformLocation((char *)position_str), position[0], position[1], position[2]);
+    glUniform3f(program->GetUniformLocation((char *)color_str), color[0], color[1], color[2]);
+}
+

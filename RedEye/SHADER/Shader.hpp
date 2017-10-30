@@ -201,12 +201,12 @@ static const char * s_FRAGMENT = SHADER(
 
                                 /*
                                 albedo = vec3(0.5,0.0,0.0);
-                                metallic = out_metallic;
-                                roughness = out_roughness;
+                                metallic = 0.5;
+                                roughness = 0.5;
                                 ao = 1.0;
-                                */
 
                                 ao = 1.0;
+                                */
 
                                 vec3 N = getNormalFromMap();
                                 vec3 V = normalize(camPos - WorldPos);
@@ -272,3 +272,82 @@ static const char * s_FRAGMENT = SHADER(
                                 //FragColor = texture(albedoMap, TexCoords);
                             }
                         );
+
+
+
+static const char * cubemap_vertex_shader = SHADER(
+            layout (location = 0) in vec3 aPos;
+
+            out vec3 WorldPos;
+
+            uniform mat4 projection;
+            uniform mat4 view;
+
+            void main()
+            {
+                WorldPos = aPos;
+                gl_Position =  projection * view * vec4(WorldPos, 1.0);
+            }
+            );
+
+static const char * cubemap_fragment_shader = SHADER(
+            out vec4 FragColor;
+            in vec3 WorldPos;
+
+            uniform sampler2D equirectangularMap;
+
+            const vec2 invAtan = vec2(0.1591, 0.3183);
+            vec2 SampleSphericalMap(vec3 v)
+            {
+                vec2 uv = vec2(atan(v.z, v.x), asin(v.y));
+                uv *= invAtan;
+                uv += 0.5;
+                return uv;
+            }
+
+            void main()
+            {
+                vec2 uv = SampleSphericalMap(normalize(WorldPos));
+                vec3 color = texture(equirectangularMap, uv).rgb;
+
+                FragColor = vec4(color, 1.0);
+            }
+            );
+
+static const char * background_vertex_shader = SHADER(
+            layout (location = 0) in vec3 aPos;
+
+            uniform mat4 projection;
+            uniform mat4 view;
+
+            out vec3 WorldPos;
+
+            void main()
+            {
+                WorldPos = aPos;
+
+                mat4 rotView = mat4(mat3(view));
+                vec4 clipPos = projection * rotView * vec4(WorldPos, 1.0);
+
+                gl_Position = clipPos.xyzw;
+            }
+            );
+
+static const char * background_fragment_shader = SHADER(
+            out vec4 FragColor;
+            in vec3 WorldPos;
+
+            uniform samplerCube environmentMap;
+
+            void main()
+            {
+                vec3 envColor = texture(environmentMap, WorldPos).rgb;
+
+                // HDR tonemap and gamma correct
+                envColor = envColor / (envColor + vec3(1.0));
+                envColor = pow(envColor, vec3(1.0/2.2));
+
+                FragColor = vec4(envColor, 1.0);
+                //FragColor = vec4(0.5);
+            }
+            );

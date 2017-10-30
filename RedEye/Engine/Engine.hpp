@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Engine/Engine.hpp"
+#include "RedGL/RedGL.hpp"
+#include <gl/glew.h>
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
@@ -56,31 +59,50 @@ public:
 
 
 
+
 typedef struct Vertex
 {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec3 tangent;
-    glm::vec2 texcoord;
+    float Position_x;
+    float Position_y;
+    float Position_z;
+
+    float Normal_x;
+    float Normal_y;
+    float Normal_z;
+
+    float Tangents_x;
+    float Tangents_y;
+    float Tangents_z;
+
+    float TexCoords_x;
+    float TexCoords_y;
 }Vertex;
 
 class Mesh
 {
 private:
+    std::vector<Vertex*> * vertices;
+    std::vector<GLuint> * indices;
+
     float * arrayVertices;
     float * arrayNormals;
     float * arrayTxtcoor;
     float * tangentsArray;
+
+    unsigned int * arrayIndices;
 public:
-    Mesh(float * arrayVertices,float * arrayNormals,float * arrayTxtcoor,float * tangentsArray);
+    GLVAO * vao;
+    Mesh(std::vector<Vertex*> * vertices, std::vector<GLuint> * indices);
     ~Mesh();
+    void DrawVAO();
 };
 
-class Model{
-private:
+class Model
+{
+public:
     std::vector<Mesh*> * meshs;
 public:
     Model(std::string path);
     ~Model();
+    void DrawAllVAO();
 };
-

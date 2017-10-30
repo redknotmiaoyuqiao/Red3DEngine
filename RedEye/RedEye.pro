@@ -48,7 +48,8 @@ SOURCES += main.cpp \
     Component/GameObject.cpp \
     Component/Light.cpp \
     Engine/Model.cpp \
-    Engine/Mesh.cpp
+    Engine/Mesh.cpp \
+    RedGL/GLTexture.cpp
 
 HEADERS += \
     DEBUG/Debug.hpp \
@@ -59,4 +60,5 @@ HEADERS += \
     Component/Component.hpp \
     File/File.hpp \
     File/IMAGE/stb_image.h \
-    Script/Test.hpp
+    Script/Test.hpp \
+    Script/PBR.hpp

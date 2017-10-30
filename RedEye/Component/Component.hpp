@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "RedGL/RedGL.hpp"
 
 
 class Transform;
@@ -34,7 +35,7 @@ public:
  *
  */
 class Light : public GameObject{
-private:
+public:
     glm::vec3 position;
     glm::vec3 color;
 public:
@@ -46,6 +47,8 @@ public:
 
     void setPosition(float x,float y,float z);
     void setColor(float r,float g,float b);
+
+    void UseLight(GLProgram * program,int i);
 };
 
 /*

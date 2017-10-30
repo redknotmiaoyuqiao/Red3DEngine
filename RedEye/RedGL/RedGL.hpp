@@ -32,6 +32,8 @@ public:
     GLuint GetUniformLocation(char * name);
 
     void putMatrix4fv(char * name,const GLfloat* value);
+    void put3f(char * name,GLfloat x,GLfloat y,GLfloat z);
+    void put1i(char * name,GLint v);
 };
 
 
@@ -53,6 +55,19 @@ public:
     void AddVBO(GLfloat * VBOdata,int bufferSize,int layout,int size = 3);
     void DrawVAO();
     void DeleteVAO();
+};
+
+class GLTexture
+{
+private:
+public:
+    GLuint TextureId;
+
+    GLTexture();
+    ~GLTexture();
+    void LoadImage(char * filePath);
+    void SetData(unsigned char * data,int width,int height,GLenum internalFormat,GLenum format);
+    void SetCharData(unsigned char * data,int width,int height);
 };
 
 

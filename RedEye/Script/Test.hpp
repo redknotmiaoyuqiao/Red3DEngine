@@ -10,23 +10,6 @@
 #include <GL/glew.h>
 
 
-float vertices[] = {
-    1.0f,1.0f,0.0f,
-    1.0f,-1.0f,0.0f,
-    -1.0f,-1.0f,0.0f,
-    -1.0f,1.0f,0.0f
-    };
-float coor[] = {
-    1.0f,1.0f,0.0f,
-    1.0f,0.0f,0.0f,
-    0.0f,0.0f,0.0f,
-    0.0f,1.0f,0.0f
-    };
-unsigned int indices[] = {
-    0,1,2
-};
-
-
 float vertices_s[] = {
     1.0f,1.0f,0.0f,
     1.0f,-1.0f,0.0f,
@@ -52,13 +35,25 @@ private:
     GLProgram * pbr;
 
     GLVAO * vao_s;
-    GLVAO * vao;
 
     Camera * mainCamera;
 
     GLRenderTarget * target;
     GLRenderTarget * target_s;
     GLRenderTarget * target_screen;
+
+    Model * teaModel;
+
+    Light * light0;
+    Light * light1;
+    Light * light2;
+    Light * light3;
+
+    GLTexture * albedoMap;
+    GLTexture * metallicMap;
+    GLTexture * roughnessMap;
+    GLTexture * normalMap;
+    GLTexture * aoMap;
 public:
     void Start()
     {
@@ -69,11 +64,6 @@ public:
         g = new GLProgram(test_VERTEX,test_FRAGMENT);
         s = new GLProgram(s_VERTEX,s_FRAGMENT);
         pbr = new GLProgram(PBR_VERTEX,PBR_FRAGMENT);
-
-        vao = new GLVAO();
-        vao->AddVBO(vertices,sizeof(vertices),0);
-        vao->AddVBO(coor,sizeof(coor),1);
-        vao->SetEBO(indices,sizeof(indices));
 
         vao_s = new GLVAO();
         vao_s->AddVBO(vertices_s,sizeof(vertices_s),0);
@@ -87,13 +77,46 @@ public:
         target_s = new GLRenderTarget(screen->getWidth(),screen->getHeight(),RED_TARGET_TEXTURE);
         target_screen = new GLRenderTarget(screen->getWidth(),screen->getHeight(),RED_TARGET_SCREEN);
 
-        Model * model = new Model("/Users/redknot/Red3DEngine/3dModel/Tea/tea.redmeshs");
+        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Tea/model");
+        //teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/nano");
+        //teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Tea/tea.redmeshs");
+        //teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/nanosuit/nanosuit.redmeshs");
+
+
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_BaseColor.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Metallic.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Roughness.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Normal.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Height.png");
+
+
+
+        light0 = new Light();
+        light0->setColor(300.0f,300.0f,300.0f);
+        light0->setPosition(-10.0f,  10.0f, 10.0f);
+
+        light1 = new Light();
+        light1->setColor(300.0f,300.0f,300.0f);
+        light1->setPosition(10.0f,  10.0f, 10.0f);
+
+        light2 = new Light();
+        light2->setColor(300.0f,300.0f,300.0f);
+        light2->setPosition(-10.0f, -10.0f, 10.0);
+
+        light3 = new Light();
+        light3->setColor(300.0f,300.0f,300.0f);
+        light3->setPosition(10.0f, -10.0f, 10.0f);
     }
 
     float w = 0.0f;
     void Update()
     {
-        //this->Mouse();
+        this->Mouse();
         //this->CameraKey();
 
         Screen * screen = Screen::getInstance();
@@ -106,6 +129,7 @@ public:
 
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
 
         glm::mat4 model;
         model = glm::scale(model,glm::vec3(1.0f));
@@ -114,8 +138,38 @@ public:
         pbr->putMatrix4fv("model",glm::value_ptr(model));
         pbr->putMatrix4fv("projection",glm::value_ptr(mainCamera->getProjection()));
         pbr->putMatrix4fv("view",glm::value_ptr(mainCamera->getView()));
+        pbr->put3f("camPos",mainCamera->cameraPos[0],mainCamera->cameraPos[1],mainCamera->cameraPos[2]);
+
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, this->albedoMap->TextureId);
+            pbr->put1i("albedoMap",0);
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, this->metallicMap->TextureId);
+            pbr->put1i("metallicMap",1);
+
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, this->roughnessMap->TextureId);
+            pbr->put1i("roughnessMap",2);
+
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, this->normalMap->TextureId);
+            pbr->put1i("normalMap",3);
+
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, this->aoMap->TextureId);
+            pbr->put1i("aoMap",4);
+
+
+        light0->UseLight(pbr,0);
+        light1->UseLight(pbr,1);
+        light2->UseLight(pbr,2);
+        light3->UseLight(pbr,3);
+
         pbr->UseProgram();
-        vao->DrawVAO();
+        teaModel->DrawAllVAO();
+
 
         /*
         target_s->setWidthAndHeight(screen->getWidth(),screen->getHeight());
@@ -127,26 +181,13 @@ public:
         s->UseProgram();
         glBindTexture(GL_TEXTURE_2D, target->getTextureId());
         vao_s->DrawVAO();
-
-
-        target_screen->setWidthAndHeight(screen->getWidth(),screen->getHeight());
-        target_screen->useFrameBuffer();
-
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        s->UseProgram();
-        glBindTexture(GL_TEXTURE_2D, target_s->getTextureId());
-        vao_s->DrawVAO();
         */
-
     }
 
     void End()
     {
         RedLog("End");
         delete g;
-        delete vao;
         delete mainCamera;
 
         delete target;
