@@ -13,7 +13,7 @@ void Engine::Start()
 {
     RedLog("Engine Start !!!!");
 
-    test = new Test();
+    //test = new Test();
     pbr = new PBR();
     //test->Start();
     pbr->Start();
@@ -28,7 +28,7 @@ void Engine::Update()
 void Engine::End()
 {
     //test->End();
-    delete test;
+    //delete test;
 
     pbr->End();
 

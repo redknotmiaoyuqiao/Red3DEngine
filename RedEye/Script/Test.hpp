@@ -116,7 +116,7 @@ public:
     float w = 0.0f;
     void Update()
     {
-        this->Mouse();
+        //this->Mouse();
         //this->CameraKey();
 
         Screen * screen = Screen::getInstance();

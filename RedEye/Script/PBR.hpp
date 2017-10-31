@@ -21,12 +21,35 @@ public:
     Screen * screen = Screen::getInstance();
 
     GLProgram * equirectangularToCubemap;
+    GLProgram * irradianceShader;
     GLProgram * background;
 
     Camera * mainCamera;
 
 
     unsigned int envCubemap;
+    unsigned int irradianceMap;
+
+
+    GLProgram * pbr;
+
+
+    Model * teaModel;
+
+    Light * light0;
+    Light * light1;
+    Light * light2;
+    Light * light3;
+
+    GLTexture * albedoMap;
+    GLTexture * metallicMap;
+    GLTexture * roughnessMap;
+    GLTexture * normalMap;
+    GLTexture * aoMap;
+
+
+
+
 
     void Start(){
 
@@ -34,11 +57,42 @@ public:
         mainCamera = new Camera(30.0f,screen->getWidth(),screen->getHeight(),0.1f,1000.0f);
 
 
+        pbr = new GLProgram(PBR_VERTEX,PBR_FRAGMENT);
         equirectangularToCubemap = new GLProgram(cubemap_vertex_shader,cubemap_fragment_shader);
         background = new GLProgram(background_vertex_shader,background_fragment_shader);
+        irradianceShader = new GLProgram(irradiance_vertex_shader,irradiance_fragment_shader);
 
-        //background = new GLProgram(cubemap_vertex_shader,cubemap_fragment_shader);
-          // equirectangularToCubemap      = new GLProgram(background_vertex_shader,background_fragment_shader);
+        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Tea/model");
+
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_BaseColor.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Metallic.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Roughness.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Normal.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Height.png");
+
+        light0 = new Light();
+        light0->setColor(300.0f,300.0f,300.0f);
+        light0->setPosition(-10.0f,  10.0f, 10.0f);
+
+        light1 = new Light();
+        light1->setColor(300.0f,300.0f,300.0f);
+        light1->setPosition(10.0f,  10.0f, 10.0f);
+
+        light2 = new Light();
+        light2->setColor(300.0f,300.0f,300.0f);
+        light2->setPosition(-10.0f, -10.0f, 10.0);
+
+        light3 = new Light();
+        light3->setColor(300.0f,300.0f,300.0f);
+        light3->setPosition(10.0f, -10.0f, 10.0f);
+
+
+
 
         target = new GLRenderTarget(screen->getWidth(),screen->getHeight(),RED_TARGET_SCREEN);
 
@@ -74,7 +128,7 @@ public:
 
             glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
             glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 1024, 1024);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
 
@@ -85,7 +139,7 @@ public:
         glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
         for (unsigned int i = 0; i < 6; ++i)
         {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 1024, 1024, 0, GL_RGB, GL_FLOAT, nullptr);
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -114,7 +168,7 @@ public:
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, hdrTexture);
 
-        glViewport(0, 0, 512, 512);
+        glViewport(0, 0, 1024, 1024);
 
         glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
         for (unsigned int i = 0; i < 6; ++i)
@@ -127,17 +181,63 @@ public:
             renderCube();
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+        // pbr: create an irradiance cubemap, and re-scale capture FBO to irradiance scale.
+        // --------------------------------------------------------------------------------
+
+        glGenTextures(1, &irradianceMap);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+        for (unsigned int i = 0; i < 6; ++i)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32, 32, 0, GL_RGB, GL_FLOAT, nullptr);
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+        glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+
+        irradianceShader->UseProgram();
+        irradianceShader->put1i("environmentMap", 0);
+        irradianceShader->putMatrix4fv("projection", glm::value_ptr(captureProjection));
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+
+        glViewport(0, 0, 32, 32);
+        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+
+        for (unsigned int i = 0; i < 6; ++i)
+        {
+            irradianceShader->putMatrix4fv("view", glm::value_ptr(captureViews[i]));
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            renderCube();
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    float w = 0.0f;
+
     void Update(){
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+
         Mouse();
         target->setWidthAndHeight(screen->getWidth(),screen->getHeight());
         target->useFrameBuffer();
+        mainCamera->setCameraWidthHeight(screen->getWidth(),screen->getHeight());
 
 
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_DEPTH_TEST);
 
         background->UseProgram();
         background->putMatrix4fv("view",glm::value_ptr(mainCamera->getView()));
@@ -146,6 +246,51 @@ public:
         glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
         renderCube();
 
+
+
+        glm::mat4 model;
+        model = glm::scale(model,glm::vec3(1.0f));
+        model = glm::rotate(model,glm::radians(90.0f),glm::vec3(-1.0f,0.0f,0.0f));
+        model = glm::rotate(model,glm::radians(w),glm::vec3(0.0f,0.0f,1.0f));
+        w = w + 0.5f;
+        pbr->putMatrix4fv("model",glm::value_ptr(model));
+        pbr->putMatrix4fv("projection",glm::value_ptr(mainCamera->getProjection()));
+        pbr->putMatrix4fv("view",glm::value_ptr(mainCamera->getView()));
+        pbr->put3f("camPos",mainCamera->cameraPos[0],mainCamera->cameraPos[1],mainCamera->cameraPos[2]);
+
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, this->albedoMap->TextureId);
+            pbr->put1i("albedoMap",0);
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, this->metallicMap->TextureId);
+            pbr->put1i("metallicMap",1);
+
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, this->roughnessMap->TextureId);
+            pbr->put1i("roughnessMap",2);
+
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, this->normalMap->TextureId);
+            pbr->put1i("normalMap",3);
+
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, this->aoMap->TextureId);
+            pbr->put1i("aoMap",4);
+
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+            pbr->put1i("irradianceMap",5);
+        }
+
+        light0->UseLight(pbr,0);
+        light1->UseLight(pbr,1);
+        light2->UseLight(pbr,2);
+        light3->UseLight(pbr,3);
+
+        pbr->UseProgram();
+        teaModel->DrawAllVAO();
     }
 
     void End(){
@@ -244,6 +389,7 @@ private:
             lastX = xpos;
             lastY = ypos;
             firstMouse = false;
+            return;
         }
 
         GLfloat xoffset = xpos - lastX;

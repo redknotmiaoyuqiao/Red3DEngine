@@ -120,6 +120,9 @@ static const char * s_FRAGMENT = SHADER(
                             uniform float out_metallic;
                             uniform float out_roughness;
 
+                            // IBL
+                            uniform samplerCube irradianceMap;
+
                             // lights
                             uniform vec3 lightPositions[4];
                             uniform vec3 lightColors[4];
@@ -203,10 +206,9 @@ static const char * s_FRAGMENT = SHADER(
                                 albedo = vec3(0.5,0.0,0.0);
                                 metallic = 0.5;
                                 roughness = 0.5;
-                                ao = 1.0;
+                                */
 
                                 ao = 1.0;
-                                */
 
                                 vec3 N = getNormalFromMap();
                                 vec3 V = normalize(camPos - WorldPos);
@@ -256,16 +258,33 @@ static const char * s_FRAGMENT = SHADER(
                                     Lo += (kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
                                 }
 
-                                vec3 ambient = vec3(0.03) * albedo * ao;
+                                // ambient lighting (we now use IBL as the ambient term)
+                                vec3 kS = fresnelSchlick(max(dot(N, V), 0.0), F0);
+                                vec3 kD = 1.0 - kS;
+                                kD *= 1.0 - metallic;
+                                vec3 irradiance = texture(irradianceMap, N).rgb;
+                                vec3 diffuse      = irradiance * albedo;
+                                vec3 ambient = (kD * diffuse) * ao;
+                                // vec3 ambient = vec3(0.002);
 
                                 vec3 color = ambient + Lo;
+
+
+                                //vec3 ambient = vec3(0.03) * albedo * ao;
+
+                                //vec3 color = ambient + Lo;
 
                                 // HDR
                                 color = color / (color + vec3(1.0));
                                 // gamma
                                 color = pow(color, vec3(1.0/2.2));
 
+
+                                //vec3 irradiance = texture(irradianceMap, N).rgb;
+
+
                                 FragColor = vec4(color, 1.0);
+                                //FragColor = vec4(irradiance, 1.0);
 
                                 //FragColor = vec4(TexCoords ,0.0, 1.0);
 
@@ -329,7 +348,7 @@ static const char * background_vertex_shader = SHADER(
                 mat4 rotView = mat4(mat3(view));
                 vec4 clipPos = projection * rotView * vec4(WorldPos, 1.0);
 
-                gl_Position = clipPos.xyzw;
+                gl_Position = clipPos.xyww;
             }
             );
 
@@ -349,5 +368,65 @@ static const char * background_fragment_shader = SHADER(
 
                 FragColor = vec4(envColor, 1.0);
                 //FragColor = vec4(0.5);
+            }
+            );
+
+static const char * irradiance_vertex_shader = SHADER(
+            layout (location = 0) in vec3 aPos;
+
+            out vec3 WorldPos;
+
+            uniform mat4 projection;
+            uniform mat4 view;
+
+            void main()
+            {
+                WorldPos = aPos;
+                gl_Position =  projection * view * vec4(WorldPos, 1.0);
+            }
+            );
+
+static const char * irradiance_fragment_shader = SHADER(
+            out vec4 FragColor;
+            in vec3 WorldPos;
+
+            uniform samplerCube environmentMap;
+
+            const float PI = 3.14159265359;
+
+            void main()
+            {
+                // The world vector acts as the normal of a tangent surface
+                // from the origin, aligned to WorldPos. Given this normal, calculate all
+                // incoming radiance of the environment. The result of this radiance
+                // is the radiance of light coming from -Normal direction, which is what
+                // we use in the PBR shader to sample irradiance.
+                vec3 N = normalize(WorldPos);
+
+                vec3 irradiance = vec3(0.0);
+
+                // tangent space calculation from origin point
+                vec3 up    = vec3(0.0, 1.0, 0.0);
+                vec3 right = cross(up, N);
+                up            = cross(N, right);
+
+                float sampleDelta = 0.025;
+                float nrSamples = 0.0;
+                for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
+                {
+                    for(float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta)
+                    {
+                        // spherical to cartesian (in tangent space)
+                        vec3 tangentSample = vec3(sin(theta) * cos(phi),  sin(theta) * sin(phi), cos(theta));
+                        // tangent space to world
+                        vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
+
+                        irradiance += texture(environmentMap, sampleVec).rgb * cos(theta) * sin(theta);
+                        nrSamples++;
+                    }
+                }
+                irradiance = PI * irradiance * (1.0 / float(nrSamples));
+
+                FragColor = vec4(irradiance, 1.0);
             }
             );

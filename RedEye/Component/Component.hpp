@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "RedGL/RedGL.hpp"
 
+#define RED_GAMEOBJECT_CAMERA 1;
 
 class Transform;
 
@@ -13,6 +14,11 @@ public:
     GameObject();
     ~GameObject();
     Transform * getTransform();
+
+    /*
+    virtual int getType() = 0;
+    virtual void render() = 0;
+    */
 };
 
 
