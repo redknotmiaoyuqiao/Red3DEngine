@@ -68,8 +68,8 @@ public:
         prefilterShader = new GLProgram(prefilter_vertex_shader,prefilter_fragment_shader);
         brdfShader = new GLProgram(brdf_vertex_shader,brdf_fragment_shader);
 
-        //teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Tea/Model");
-        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/coat/Model");
+        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP");
+        //teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/coat/Model");
         /*
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_color.png");
@@ -82,19 +82,30 @@ public:
         aoMap = new GLTexture();
         aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/materialball_ao.png");
         */
-
         /*
         albedoMap = new GLTexture();
-        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_BaseColor.png");
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T3/tea_DefaultMaterial_BaseColor.png");
         metallicMap = new GLTexture();
-        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Metallic.png");
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T3/tea_DefaultMaterial_Metallic.png");
         roughnessMap = new GLTexture();
-        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Roughness.png");
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T3/tea_DefaultMaterial_Roughness.png");
         normalMap = new GLTexture();
-        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Normal.png");
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T3/tea_DefaultMaterial_Normal.png");
         aoMap = new GLTexture();
-        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Height.png");
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/T3/tea_DefaultMaterial_Height.png");
         */
+
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_M.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_R.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_N.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_AO.png");
+
 
 
         light0 = new Light();
@@ -350,9 +361,9 @@ public:
 
 
         glm::mat4 model;
-        model = glm::scale(model,glm::vec3(1.0f));
-        //model = glm::rotate(model,glm::radians(90.0f),glm::vec3(-1.0f,0.0f,0.0f));
-        model = glm::rotate(model,glm::radians(w),glm::vec3(0.0f,1.0f,0.0f));
+        model = glm::scale(model,glm::vec3(0.3f));
+        model = glm::rotate(model,glm::radians(90.0f),glm::vec3(-1.0f,0.0f,0.0f));
+        model = glm::rotate(model,glm::radians(w),glm::vec3(0.0f,0.0f,1.0f));
         w = w + 0.5f;
         pbr->putMatrix4fv("model",glm::value_ptr(model));
         pbr->putMatrix4fv("projection",glm::value_ptr(mainCamera->getProjection()));
