@@ -34,6 +34,7 @@ public:
     void putMatrix4fv(char * name,const GLfloat* value);
     void put3f(char * name,GLfloat x,GLfloat y,GLfloat z);
     void put1i(char * name,GLint v);
+    void put1f(char * name,GLfloat value);
 };
 
 

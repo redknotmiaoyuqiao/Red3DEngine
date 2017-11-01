@@ -89,4 +89,10 @@ void GLProgram::put1i(char * name,GLint v){
     glUniform1i(this->GetUniformLocation(name),v);
 }
 
+void GLProgram::put1f(char * name,GLfloat value)
+{
+    this->UseProgram();
+    glUniform1f(this->GetUniformLocation(name), value);
+}
+
 
