@@ -68,8 +68,22 @@ public:
         prefilterShader = new GLProgram(prefilter_vertex_shader,prefilter_fragment_shader);
         brdfShader = new GLProgram(brdf_vertex_shader,brdf_fragment_shader);
 
-        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Tea/model");
+        //teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Tea/Model");
+        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/coat/Model");
+        /*
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_color.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_metalness.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_gloss.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_nmap.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/materialball_ao.png");
+        */
 
+        /*
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_BaseColor.png");
         metallicMap = new GLTexture();
@@ -80,6 +94,8 @@ public:
         normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Normal.png");
         aoMap = new GLTexture();
         aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Height.png");
+        */
+
 
         light0 = new Light();
         light0->setColor(300.0f,300.0f,300.0f);
@@ -335,8 +351,8 @@ public:
 
         glm::mat4 model;
         model = glm::scale(model,glm::vec3(1.0f));
-        model = glm::rotate(model,glm::radians(90.0f),glm::vec3(-1.0f,0.0f,0.0f));
-        model = glm::rotate(model,glm::radians(w),glm::vec3(0.0f,0.0f,1.0f));
+        //model = glm::rotate(model,glm::radians(90.0f),glm::vec3(-1.0f,0.0f,0.0f));
+        model = glm::rotate(model,glm::radians(w),glm::vec3(0.0f,1.0f,0.0f));
         w = w + 0.5f;
         pbr->putMatrix4fv("model",glm::value_ptr(model));
         pbr->putMatrix4fv("projection",glm::value_ptr(mainCamera->getProjection()));

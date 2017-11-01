@@ -13,6 +13,7 @@ Model::Model(std::string path)
         RedLog("wwwwwwwww:\n%s\n\n",file_path.c_str());
 
         FILE * fb = fopen(file_path.c_str(), "rb");
+
         if(fb == NULL){
             break;
         }
