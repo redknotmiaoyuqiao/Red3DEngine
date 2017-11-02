@@ -73,16 +73,16 @@ public:
     float height;
 
     float fovy;
-    float near;
-    float far;
+	float _near;
+	float _far;
 
     glm::mat4 projection;
     glm::mat4 view;
 public:
-    Camera(float fovy,float width,float height,float near,float far);
+    Camera(float fovy,float width,float height,float _near,float _far);
     ~Camera();
 
-    void setCamera(float fovy,float width,float height,float near,float far);
+    void setCamera(float fovy,float width,float height,float _near,float _far);
 
     void setCameraWidthHeight(float width,float height);
 

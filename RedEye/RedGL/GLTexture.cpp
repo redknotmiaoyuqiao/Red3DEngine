@@ -1,5 +1,5 @@
 #include "RedGL.hpp"
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include "File/File.hpp"
 
 GLTexture::GLTexture()

@@ -7,10 +7,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <GLFW/glfw3.h>
-#include <GL/glew.h>
-
-#include <ctime>
-#include <unistd.h>
+#include <glad/glad.h>
 
 #include <File/IMAGE/stb_image.h>
 
@@ -71,19 +68,19 @@ public:
         prefilterShader = new GLProgram(prefilter_vertex_shader,prefilter_fragment_shader);
         brdfShader = new GLProgram(brdf_vertex_shader,brdf_fragment_shader);
 
-        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP");
-        teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/coat/Model");
+        //teaModel = new Model("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP");
+        teaModel = new Model("c://Red3DEngine/3dModel/coat/Model");
 
         albedoMap = new GLTexture();
-        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_color.jpeg");
+        albedoMap->LoadImage("c://Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_color.jpeg");
         metallicMap = new GLTexture();
-        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_metalness.jpeg");
+        metallicMap->LoadImage("c://Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_metalness.jpeg");
         roughnessMap = new GLTexture();
-        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_gloss.jpeg");
+        roughnessMap->LoadImage("c://Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_gloss.jpeg");
         normalMap = new GLTexture();
-        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_nmap.jpg");
+        normalMap->LoadImage("c://Red3DEngine/3dModel/coat/T/export3dcoat_lambert3SG_nmap.jpg");
         aoMap = new GLTexture();
-        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/T/materialball_ao.jpg");
+        aoMap->LoadImage("c://Red3DEngine/3dModel/coat/T/materialball_ao.jpg");
 
         /*
         albedoMap = new GLTexture();
@@ -135,7 +132,7 @@ public:
 
         stbi_set_flip_vertically_on_load(true);
         int width, height, nrComponents;
-        float *data = stbi_loadf("/Users/redknot/Red3DEngine/Texture/hdr/newport_loft.hdr", &width, &height, &nrComponents, 0);
+        float *data = stbi_loadf("c://Red3DEngine/Texture/hdr/newport_loft.hdr", &width, &height, &nrComponents, 0);
         unsigned int hdrTexture;
         if (data)
         {

@@ -4,7 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-Camera::Camera(float fovy,float width,float height,float near,float far)
+Camera::Camera(float fovy,float width,float height,float _near,float _far)
 {
     cameraPos = new float[3];
     cameraFront = new float[3];
@@ -28,8 +28,8 @@ Camera::Camera(float fovy,float width,float height,float near,float far)
     this->width = width;
     this->height = height;
     this->fovy = fovy;
-    this->near = near;
-    this->far = far;
+    this->_near = _near;
+    this->_far = _far;
 }
 
 Camera::~Camera()
@@ -39,13 +39,13 @@ Camera::~Camera()
     delete cameraUp;
 }
 
-void Camera::setCamera(float fovy,float width,float height,float near,float far)
+void Camera::setCamera(float fovy,float width,float height,float _near,float _far)
 {
     this->width = width;
     this->height = height;
     this->fovy = fovy;
-    this->near = near;
-    this->far = far;
+    this->_near = _near;
+    this->_far = _far;
 }
 
 void Camera::setCameraWidthHeight(float width,float height)
@@ -78,7 +78,7 @@ void Camera::setCameraUp(float x,float y,float z)
 
 glm::mat4 Camera::getProjection()
 {
-    this->projection = glm::perspective(glm::radians(this->fovy), width / (height * 1.0f), near, far);
+    this->projection = glm::perspective(glm::radians(this->fovy), width / (height * 1.0f), _near, _far);
     return this->projection;
 }
 

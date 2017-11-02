@@ -7,7 +7,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <GLFW/glfw3.h>
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 
 float vertices_s[] = {

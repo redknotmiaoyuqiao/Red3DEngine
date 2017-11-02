@@ -1,6 +1,6 @@
 #include "DEBUG/Debug.hpp"
 #include <GLFW/glfw3.h>
-#include <GL/glew.h>
+#include <glad/glad.h>  
 
 #include "Engine/Engine.hpp"
 
@@ -60,12 +60,20 @@ int main()
     Screen * screen = Screen::getInstance();
     screen->setWidthAndHeight(scrWidth,scrHeight);
 
+	// glad初始化  
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		printf("加载失败");
+		return -1;
+	}
+	/*
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         RedLog("Failed to initialize GLEW\n");
         glfwTerminate();
         return -1;
     }
+	*/
 
     Engine * RedEngine = new Engine();
     RedEngine->Start();

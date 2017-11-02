@@ -2,7 +2,7 @@
 
 #include "Engine/Engine.hpp"
 #include "RedGL/RedGL.hpp"
-#include <gl/glew.h>
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
