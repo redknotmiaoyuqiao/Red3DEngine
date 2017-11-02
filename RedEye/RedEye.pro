@@ -26,12 +26,9 @@ unix:macx
 
     LIBS+= -L/usr/local/lib -lglfw3
     LIBS+= -L/usr/local/lib -lGLEW
-    LIBS+= -L/usr/local/lib -lassimp
-    LIBS+= -L/usr/local/lib -lfreetype
 }
 
 INCLUDEPATH += /usr/local/include
-INCLUDEPATH += /usr/local/include/freetype2
 INCLUDEPATH += glm/
 
 SOURCES += main.cpp \

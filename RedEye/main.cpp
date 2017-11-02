@@ -33,8 +33,8 @@ int main()
     //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     GLFWwindow * window;
-    int width = 800;
-    int height = 640;
+    int width = 2560;
+    int height = 1600;
 
     bool isFullScreen = false;
     GLFWmonitor* pMonitor = isFullScreen ? glfwGetPrimaryMonitor() : NULL;

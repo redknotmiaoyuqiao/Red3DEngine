@@ -12,7 +12,7 @@ Camera::Camera(float fovy,float width,float height,float near,float far)
 
     cameraPos[0] = 0.0f;
     cameraPos[1] = 0.0f;
-    cameraPos[2] = 100.0f;
+    cameraPos[2] = 15.0f;
 
     cameraFront[0] = 0.0f;
     cameraFront[1] = 0.0f;

@@ -59,6 +59,17 @@ public:
 
     void Start(){
 
+        albedoMap = new GLTexture();
+        albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_color.png");
+        metallicMap = new GLTexture();
+        metallicMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_metalness.png");
+        roughnessMap = new GLTexture();
+        roughnessMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_gloss.png");
+        normalMap = new GLTexture();
+        normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/export3dcoat_lambert3SG_nmap.png");
+        aoMap = new GLTexture();
+        aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/coat/materialball_ao.png");
+
         /*
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_A.png");
@@ -73,8 +84,7 @@ public:
         aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/T/Cerberus_AO.png");
         */
 
-
-
+        /*
         albedoMap = new GLTexture();
         albedoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_BaseColor.png");
         metallicMap = new GLTexture();
@@ -85,7 +95,7 @@ public:
         normalMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Normal.png");
         aoMap = new GLTexture();
         aoMap->LoadImage("/Users/redknot/Red3DEngine/3dModel/Tea/tea_DefaultMaterial_Height.png");
-
+        */
 
 
         /*
@@ -142,7 +152,8 @@ public:
         std::string path = "/storage/emulated/0/3D/nano";
         //std::string path = "/data/data/com.redknot.red3dengineandroid/cache/nano";
 #else
-        std::string path = "/Users/redknot/Red3DEngine/3dModel/Tea/model";
+        std::string path = "/Users/redknot/Red3DEngine/3dModel/coat/Model";
+        //std::string path = "/Users/redknot/Red3DEngine/3dModel/Tea/model";
         //std::string path = "/Users/redknot/Red3DEngine/3dModel/Cerberus_by_Andrew_Maximov/Cerberus_LP";
         //std::string path = "/Users/redknot/Red3DEngine/3dModel/qiu";
 #endif
